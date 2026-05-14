@@ -3,6 +3,9 @@ BUILD_DIR		:= .build
 
 SRC_DIR			:= src
 SRCS			:= 								\
+	utils/ft_atoi.c								\
+												\
+	args.c										\
 	main.c										\
 
 INCLUDES		:= 								\
@@ -15,11 +18,12 @@ DEPS			:= $(OBJS:.o=.d)
 CC				:= cc
 CFLAGS			:= -Wall -Wextra -Werror
 CPPFLAGS		:= $(addprefix -I,$(INCLUDES)) -MMD -MP
+LDFLAGS 		:= -pthread
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $^ -o $@
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(dir $@)
