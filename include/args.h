@@ -1,7 +1,7 @@
 #ifndef ARGS_H
 # define ARGS_H
 
-typedef struct	s_args
+typedef struct s_args
 {
 	int		number_of_coders;
 	int		time_to_burnout;

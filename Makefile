@@ -7,6 +7,10 @@ SRCS			:= 								\
 												\
 	args.c										\
 	main.c										\
+	coder.c										\
+	codexion.c									\
+	dongle.c									\
+	routine.c									\
 
 INCLUDES		:= 								\
 	include										\
