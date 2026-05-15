@@ -13,6 +13,7 @@ int	init_codexion(t_codexion *codexion)
 		free_coders(codexion->coders);
 		return (-1);
 	}
+	get_dongle_pairs(codexion);
 	return (0);
 }
 
