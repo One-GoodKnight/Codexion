@@ -18,8 +18,15 @@ t_dongle	*init_dongles(int nb_dongles)
 	{
 		if (pthread_mutex_init(&dongles[i].lock, NULL) != 0)
 		{
-			free_dongles(dongles, nb_dongles);
-			return (NULL);
+			free_dongles(dongles, i - 1);
+				return (NULL);
+		}
+		if (pthread_cond_init(&dongles[i].cond, NULL) != 0)
+		{
+			if (pthread_mutex_destroy(&dongles[i].lock) != 0)
+				fprintf(stderr, "Failed to destroy mutex of dongle %d.\n", i);
+			free_dongles(dongles, i - 1);
+				return (NULL);
 		}
 		i++;
 	}
@@ -35,6 +42,8 @@ void	free_dongles(t_dongle *dongles, int nb_dongles)
 	{
 		if (pthread_mutex_destroy(&dongles[i].lock) != 0)
 			fprintf(stderr, "Failed to destroy mutex of dongle %d.\n", i);
+		if (pthread_cond_destroy(&dongles[i].cond) != 0)
+			fprintf(stderr, "Failed to destroy cond of dongle %d.\n", i);
 		i++;
 	}
 	free(dongles);

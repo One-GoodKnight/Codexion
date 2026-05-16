@@ -9,8 +9,8 @@ void	compile(t_coder *coder)
 	codexion = coder->codexion;
 	ft_printf(coder, COMPILING);
 	ft_msleep(codexion->args.time_to_compile);
-	coder->dongle_pair.left->time_available = codexion->args.dongle_cooldown * 1000;
-	coder->dongle_pair.left->time_available = codexion->args.dongle_cooldown * 1000;
+	coder->dongle_pair.left->when_available = codexion->args.dongle_cooldown * 1000;
+	coder->dongle_pair.left->when_available = codexion->args.dongle_cooldown * 1000;
 	pthread_mutex_unlock(&coder->dongle_pair.left->lock);
 	pthread_mutex_unlock(&coder->dongle_pair.right->lock);
 	pthread_mutex_lock(&coder->compile_count_lock);

@@ -6,8 +6,9 @@
 
 typedef struct s_dongle
 {
-	long long		time_available;
+	long long		when_available;
 	pthread_mutex_t	lock;
+	pthread_cond_t	cond;
 }	t_dongle;
 
 typedef struct s_dongle_pair

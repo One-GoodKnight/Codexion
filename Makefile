@@ -9,10 +9,11 @@ SRCS			:= 								\
 	utils/ft_printf.c							\
 												\
 	args.c										\
-	main.c										\
 	coder.c										\
 	codexion.c									\
 	dongle.c									\
+	main.c										\
+	monitor.c									\
 	routine.c									\
 	routine_cdr.c								\
 

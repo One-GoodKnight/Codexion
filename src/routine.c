@@ -1,6 +1,7 @@
 #include "routine.h"
 #include "coder.h"
 #include "codexion.h"
+#include "monitor.h"
 #include "utils.h"
 #include <pthread.h>
 #include <stdio.h>
@@ -10,21 +11,23 @@
 static void	take_dongles(t_coder *coder)
 {
 	t_dongle	*first_dongle;
-	t_dongle	*second_dungle;
+	t_dongle	*second_dongle;
 
 	if (coder->id % 2 == 0)
 	{
 		first_dongle = coder->dongle_pair.left;
-		second_dungle = coder->dongle_pair.right;
+		second_dongle = coder->dongle_pair.right;
 	}
 	else
 	{
 		first_dongle = coder->dongle_pair.right;
-		second_dungle = coder->dongle_pair.left;
+		second_dongle = coder->dongle_pair.left;
 	}
 	pthread_mutex_lock(&first_dongle->lock);
+	pthread_cond_wait(&first_dongle->cond, &first_dongle->lock);
 	ft_printf(coder, TAKING_DONGLE);
-	pthread_mutex_lock(&second_dungle->lock);
+	pthread_mutex_lock(&second_dongle->lock);
+	pthread_cond_wait(&second_dongle->cond, &second_dongle->lock);
 	ft_printf(coder, TAKING_DONGLE);
 }
 
@@ -61,6 +64,7 @@ void	start_routines(t_codexion *codexion)
 			break ;
 		i++;
 	}
+	monitor(codexion);
 	j = 0;
 	while (j < i)
 	{
