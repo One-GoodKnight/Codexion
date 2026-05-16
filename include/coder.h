@@ -26,7 +26,6 @@ typedef struct	s_coder
 }	t_coder;
 
 t_coder	*init_coders(t_codexion *codexion);
-void	get_dongle_pairs(t_codexion *codexion);
 void	free_coders(t_coder *coders, int nb_coders);
 
 #endif
