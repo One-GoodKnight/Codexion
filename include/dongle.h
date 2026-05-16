@@ -19,6 +19,6 @@ typedef struct s_dongle_pair
 }	t_dongle_pair;
 
 t_dongle	*init_dongles(int number_of_dongles);
-void		free_dongles(t_dongle *dongles, int nb_dongles)
+void		free_dongles(t_dongle *dongles, int nb_dongles);
 
 #endif

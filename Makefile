@@ -20,7 +20,7 @@ OBJS			:= $(SRCS:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 DEPS			:= $(OBJS:.o=.d)
 
 CC				:= cc
-CFLAGS			:= -Wall -Wextra -Werror
+CFLAGS			:= -Wall -Wextra -Werror -g3
 CPPFLAGS		:= $(addprefix -I,$(INCLUDES)) -MMD -MP
 LDFLAGS 		:= -pthread
 

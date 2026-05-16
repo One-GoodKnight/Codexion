@@ -19,16 +19,16 @@ int	start_routines(t_codexion *codexion)
 	int		j;
 
 	i = 0;
-	while (codexion->coders[i])
+	while (i < codexion->args.number_of_coders)
 	{
-		if (pthread_create(&codexion->coders[i]->thread, NULL, &routine, codexion->coders[i]) != 0)
+		if (pthread_create(&codexion->coders[i].thread, NULL, &routine, &codexion->coders[i]) != 0)
 			break ;
 		i++;
 	}
 	j = 0;
 	while (j < i)
 	{
-		if (pthread_join(codexion->coders[j]->thread, NULL) != 0)
+		if (pthread_join(codexion->coders[j].thread, NULL) != 0)
 			fprintf(stderr, "Failed to join thread of coder %d\n", j);
 		j++;
 	}

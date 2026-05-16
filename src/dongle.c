@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-void	free_dongles(t_dongle *dongles);
+void	free_dongles(t_dongle *dongles, int nb_dongles);
 
 t_dongle	*init_dongles(int nb_dongles)
 {

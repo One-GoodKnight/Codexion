@@ -1,16 +1,17 @@
 #include "coder.h"
 #include "codexion.h"
 #include "dongle.h"
+#include <stdlib.h>
 
 int	init_codexion(t_codexion *codexion)
 {																																																																							
-	codexion->coders = init_coders(codexion, codexion->args.number_of_coders);
+	codexion->coders = init_coders(codexion);
 	if (!codexion->coders)
 		return (-1);
 	codexion->dongles = init_dongles(codexion->args.number_of_coders);
 	if (!codexion->dongles)
 	{
-		free_coders(codexion->coders);
+		free(codexion->coders);
 		return (-1);
 	}
 	get_dongle_pairs(codexion);
@@ -19,6 +20,6 @@ int	init_codexion(t_codexion *codexion)
 
 void	free_codexion(t_codexion *codexion)
 {
-	free_coders(codexion->coders);
-	free_dongles(codexion->dongles);
+	free(codexion->coders);
+	free_dongles(codexion->dongles, codexion->args.number_of_coders);
 }
