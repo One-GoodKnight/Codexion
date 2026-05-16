@@ -19,5 +19,7 @@ void	ft_printf(t_coder *coder, t_state state)
 		printf("%llu %d is debugging\n", time, id);
 	else if (state == REFACTORING)
 		printf("%llu %d is refactoring\n", time, id);
+	else if (state == BURNOUT)
+		printf("%llu %d burned out\n", time, id);
 	pthread_mutex_unlock(&coder->codexion->print_lock);
 }

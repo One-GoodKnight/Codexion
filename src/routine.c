@@ -40,11 +40,20 @@ static void	*routine(void *arg)
 	return (NULL);
 }
 
-int	start_routines(t_codexion *codexion)
+static void	single_coder_edge_case(t_coder *coder)
+{
+	ft_printf(coder, TAKING_DONGLE);
+	ft_usleep(coder->codexion->args.time_to_burnout);
+	ft_printf(coder, BURNOUT);
+}
+
+void	start_routines(t_codexion *codexion)
 {
 	int		i;
 	int		j;
 
+	if (codexion->args.number_of_coders == 1)
+		return (single_coder_edge_case(&codexion->coders[0]));
 	i = 0;
 	while (i < codexion->args.number_of_coders)
 	{
@@ -59,5 +68,4 @@ int	start_routines(t_codexion *codexion)
 			fprintf(stderr, "Failed to join thread of coder %d\n", j);
 		j++;
 	}
-	return (0);
 }

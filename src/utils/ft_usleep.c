@@ -1,15 +1,11 @@
+#include "utils.h"
 #include <unistd.h>
 
 void	ft_usleep(int time)
 {
 	long long	target_time;
-	long long	time_passed;
 
-	target_time = time * 1000;
-	time_passed = 0;
-	while (time_passed < target_time)
-	{
-		time_passed += 100;
-		usleep(100);
-	}
+	target_time = ft_get_time() + time * 1000;
+	while (ft_get_time() < target_time)
+		usleep(10);
 }
