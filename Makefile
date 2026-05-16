@@ -14,6 +14,7 @@ SRCS			:= 								\
 	codexion.c									\
 	dongle.c									\
 	routine.c									\
+	routine_cdr.c								\
 
 INCLUDES		:= 								\
 	include										\
