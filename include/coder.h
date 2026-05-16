@@ -8,17 +8,17 @@ typedef struct s_codexion t_codexion;
 
 typedef enum	e_state
 {
+	TAKING_DONGLE,
 	COMPILING,
-	DEBUGING,
-	REFACTORING
+	DEBUGGING,
+	REFACTORING,
+	BURNOUT,
 }	t_state;
 
 typedef struct	s_coder
 {
 	pthread_t		thread;
 	int				id;
-	t_state			state;
-	int				state_progress;
 	t_dongle_pair	dongle_pair;
 	t_codexion		*codexion;
 }	t_coder;

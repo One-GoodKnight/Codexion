@@ -1,15 +1,62 @@
+#include "routine.h"
 #include "coder.h"
 #include "codexion.h"
+#include "utils.h"
+#include <pthread.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <stdbool.h>
+
+static void	take_dongles(t_coder *coder)
+{
+	t_dongle	*first_dongle;
+	t_dongle	*second_dungle;
+
+	if (coder->id % 2 == 0)
+	{
+		first_dongle = coder->dongle_pair.left;
+		second_dungle = coder->dongle_pair.right;
+	}
+	else
+	{
+		first_dongle = coder->dongle_pair.right;
+		second_dungle = coder->dongle_pair.left;
+	}
+	pthread_mutex_lock(&first_dongle->lock);
+	ft_printf(coder, TAKING_DONGLE);
+	pthread_mutex_lock(&second_dungle->lock);
+	ft_printf(coder, TAKING_DONGLE);
+}
+
+static void	compile(t_coder *coder)
+{
+	ft_printf(coder, COMPILING);
+	ft_usleep(coder->codexion->args.time_to_compile);
+	pthread_mutex_unlock(&coder->dongle_pair.left->lock);
+	pthread_mutex_unlock(&coder->dongle_pair.right->lock);
+}
+
+static void	debug(t_coder *coder)
+{
+	ft_printf(coder, DEBUGGING);
+	ft_usleep(coder->codexion->args.time_to_debug);
+}
+
+static void	refactor(t_coder *coder)
+{
+	ft_printf(coder, REFACTORING);
+	ft_usleep(coder->codexion->args.time_to_refactor);
+}
 
 static void	*routine(void *arg)
 {
 	t_coder	*coder;
 
 	coder = (t_coder *)arg;
-	printf("%d\n", coder->codexion->args.number_of_coders);
+	take_dongles(coder);
+	compile(coder);
+	debug(coder);
+	refactor(coder);
 	return (NULL);
 }
 

@@ -23,7 +23,6 @@ t_dongle	*init_dongles(int nb_dongles)
 			free_dongles(dongles, nb_dongles);
 			return (NULL);
 		}
-		dongles[i].id = i;
 		i++;
 	}
 	return (dongles);
@@ -37,7 +36,7 @@ void	free_dongles(t_dongle *dongles, int nb_dongles)
 	while (i < nb_dongles)
 	{
 		if (pthread_mutex_destroy(&dongles[i].lock) != 0)
-			fprintf(stderr, "Failed to destroy mutex of dongle %d\n", i);
+			fprintf(stderr, "Failed to destroy mutex of dongle %d.\n", i);
 		i++;
 	}
 	free(dongles);
