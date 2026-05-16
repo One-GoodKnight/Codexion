@@ -11,6 +11,9 @@ int	main(int argc, char **argv)
 	if (parse_args(&codexion.args, argc, argv) == -1)
 		return (-1);
 	display_args(&codexion.args);
+	if (codexion.args.number_of_coders == 0 ||
+		codexion.args.number_of_compiles_required == 0)
+		return (0);
 	if (init_codexion(&codexion) == -1)
 		return (1);
 	start_routines(&codexion);

@@ -21,7 +21,6 @@ typedef struct	s_coder
 	t_codexion	*codexion;
 }	t_coder;
 
-t_coder	**init_coders(t_codexion *codexion, int number_of_coders);
-void	free_coders(t_coder **coders);
+t_coder	*init_coders(t_codexion *codexion);
 
 #endif

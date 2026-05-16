@@ -9,8 +9,8 @@ typedef struct s_dongle t_dongle;
 typedef struct s_codexion
 {
 	t_args		args;
-	t_coder		**coders;
-	t_dongle	**dongles;
+	t_coder		*coders;
+	t_dongle	*dongles;
 }	t_codexion;
 
 int		init_codexion(t_codexion *codexion);
