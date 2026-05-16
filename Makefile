@@ -5,7 +5,7 @@ SRC_DIR			:= src
 SRCS			:= 								\
 	utils/ft_atoi.c								\
 	utils/ft_get_time.c							\
-	utils/ft_usleep.c							\
+	utils/ft_sleep.c							\
 	utils/ft_printf.c							\
 												\
 	args.c										\

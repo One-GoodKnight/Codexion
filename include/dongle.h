@@ -6,8 +6,7 @@
 
 typedef struct s_dongle
 {
-	bool			available;
-	long long		delay;
+	long long		time_available;
 	pthread_mutex_t	lock;
 }	t_dongle;
 
