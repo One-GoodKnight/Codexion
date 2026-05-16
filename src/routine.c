@@ -44,8 +44,16 @@ static void	take_dongles(t_coder *coder)
 	}
 	take_dongle(coder, first_dongle);
 	if (ended(coder->codexion))
+	{
+		pthread_mutex_unlock(&first_dongle->lock);
 		return ;
+	}
 	take_dongle(coder, second_dongle);
+	if (ended(coder->codexion))
+	{
+		pthread_mutex_unlock(&first_dongle->lock);
+		pthread_mutex_unlock(&second_dongle->lock);
+	}
 }
 
 static void	*routine(void *arg)

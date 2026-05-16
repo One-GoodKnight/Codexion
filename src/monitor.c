@@ -23,7 +23,7 @@ void	monitor(t_codexion *codexion)
 	t_coder		*coder;
 	t_dongle	*dongle;
 
-	ft_usleep(100);
+	ft_msleep(100);
 	while (codexion->end != true)
 	{
 		time = ft_get_time();
