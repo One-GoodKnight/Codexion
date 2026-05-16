@@ -30,8 +30,15 @@ static void	take_dongles(t_coder *coder)
 
 static void	compile(t_coder *coder)
 {
+	t_codexion	*codexion;
+
+	codexion = coder->codexion;
 	ft_printf(coder, COMPILING);
-	ft_usleep(coder->codexion->args.time_to_compile);
+	ft_usleep(codexion->args.time_to_compile);
+	coder->dongle_pair.left->delay = codexion->args.dongle_cooldown;
+	coder->dongle_pair.right->delay = codexion->args.dongle_cooldown;
+	coder->dongle_pair.left->available = false;
+	coder->dongle_pair.right->available = false;
 	pthread_mutex_unlock(&coder->dongle_pair.left->lock);
 	pthread_mutex_unlock(&coder->dongle_pair.right->lock);
 }
