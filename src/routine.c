@@ -41,6 +41,9 @@ static void	compile(t_coder *coder)
 	coder->dongle_pair.right->available = false;
 	pthread_mutex_unlock(&coder->dongle_pair.left->lock);
 	pthread_mutex_unlock(&coder->dongle_pair.right->lock);
+	pthread_mutex_lock(&coder->compile_count_lock);
+	coder->compile_count++;
+	pthread_mutex_unlock(&coder->compile_count_lock);
 }
 
 static void	debug(t_coder *coder)

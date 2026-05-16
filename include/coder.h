@@ -20,10 +20,13 @@ typedef struct	s_coder
 	pthread_t		thread;
 	int				id;
 	t_dongle_pair	dongle_pair;
+	int				compile_count;
+	pthread_mutex_t	compile_count_lock;
 	t_codexion		*codexion;
 }	t_coder;
 
 t_coder	*init_coders(t_codexion *codexion);
 void	get_dongle_pairs(t_codexion *codexion);
+void	free_coders(t_coder *coders, int nb_coders);
 
 #endif
