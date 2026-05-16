@@ -16,6 +16,7 @@ typedef struct s_codexion
 	t_dongle		*dongles;
 	pthread_mutex_t	print_lock;
 	bool			end;
+	pthread_mutex_t	end_lock;
 }	t_codexion;
 
 int		init_codexion(t_codexion *codexion);

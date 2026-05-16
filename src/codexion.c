@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   codexion.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/16 14:55:46 by aginiaux          #+#    #+#             */
+/*   Updated: 2026/05/16 15:03:12 by aginiaux         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "coder.h"
 #include "codexion.h"
 #include "dongle.h"
@@ -21,22 +33,41 @@ static void	get_dongle_pairs(t_codexion *codexion)
 	}
 }
 
-int	init_codexion(t_codexion *codexion)
+static int	init_mutex(t_codexion *codexion)
 {
 	if (pthread_mutex_init(&codexion->print_lock, NULL) != 0)
 		return (-1);
-	codexion->coders = init_coders(codexion);
-	if (!codexion->coders)
+	if (pthread_mutex_init(&codexion->end_lock, NULL) != 0)
 	{
 		if (pthread_mutex_destroy(&codexion->print_lock) != 0)
 			fprintf(stderr, "Failed to destroy mutex print of codexion.\n");
 		return (-1);
 	}
+	return (0);
+}
+
+static void	destroy_mutex(t_codexion *codexion)
+{
+	if (pthread_mutex_destroy(&codexion->print_lock) != 0)
+		fprintf(stderr, "Failed to destroy mutex print of codexion.\n");
+	if (pthread_mutex_destroy(&codexion->end_lock) != 0)
+		fprintf(stderr, "Failed to destroy mutex end of codexion.\n");
+}
+
+int	init_codexion(t_codexion *codexion)
+{
+	if (init_mutex(codexion) == -1)
+		return (-1);
+	codexion->coders = init_coders(codexion);
+	if (!codexion->coders)
+	{
+		destroy_mutex(codexion);
+		return (-1);
+	}
 	codexion->dongles = init_dongles(codexion->args.number_of_coders);
 	if (!codexion->dongles)
 	{
-		if (pthread_mutex_destroy(&codexion->print_lock) != 0)
-			fprintf(stderr, "Failed to destroy mutex print of codexion.\n");
+		destroy_mutex(codexion);
 		free_coders(codexion->coders, codexion->args.number_of_coders);
 		return (-1);
 	}
@@ -48,8 +79,7 @@ int	init_codexion(t_codexion *codexion)
 
 void	free_codexion(t_codexion *codexion)
 {
-	if (pthread_mutex_destroy(&codexion->print_lock) != 0)
-		fprintf(stderr, "Failed to destroy mutex print of codexion.\n");
+	destroy_mutex(codexion);
 	free_coders(codexion->coders, codexion->args.number_of_coders);
 	free_dongles(codexion->dongles, codexion->args.number_of_coders);
 }

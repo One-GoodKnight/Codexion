@@ -20,6 +20,7 @@ typedef struct	s_coder
 	pthread_t		thread;
 	int				id;
 	t_dongle_pair	dongle_pair;
+	long long		last_compile_time;
 	int				compile_count;
 	pthread_mutex_t	compile_count_lock;
 	t_codexion		*codexion;

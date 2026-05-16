@@ -4,6 +4,27 @@
 #include <string.h>
 #include <stdio.h>
 
+static int	init_mutex_cond(t_dongle *dongle)
+{
+	if (pthread_mutex_init(&dongle->lock, NULL) != 0)
+		return (-1);
+	if (pthread_mutex_init(&dongle->when_available_lock, NULL) != 0)
+	{
+		if (pthread_mutex_destroy(&dongle->lock) != 0)
+			fprintf(stderr, "Failed to destroy mutex of dongle.\n");
+		return (-1);
+	}
+	if (pthread_cond_init(&dongle->cd_cond, NULL) != 0)
+	{
+		if (pthread_mutex_destroy(&dongle->lock) != 0)
+			fprintf(stderr, "Failed to destroy mutex of dongle.\n");
+		if (pthread_mutex_destroy(&dongle->when_available_lock) != 0)
+			fprintf(stderr, "Failed to destroy when avalaible mutex of dongle.\n");
+		return (-1);
+	}
+	return (0);
+}
+
 t_dongle	*init_dongles(int nb_dongles)
 {
 	t_dongle	*dongles;
@@ -16,18 +37,8 @@ t_dongle	*init_dongles(int nb_dongles)
 	i = 0;
 	while (i < nb_dongles)
 	{
-		if (pthread_mutex_init(&dongles[i].lock, NULL) != 0)
-		{
+		if (init_mutex_cond(&dongles[i]) == -1)
 			free_dongles(dongles, i - 1);
-				return (NULL);
-		}
-		if (pthread_cond_init(&dongles[i].cond, NULL) != 0)
-		{
-			if (pthread_mutex_destroy(&dongles[i].lock) != 0)
-				fprintf(stderr, "Failed to destroy mutex of dongle %d.\n", i);
-			free_dongles(dongles, i - 1);
-				return (NULL);
-		}
 		i++;
 	}
 	return (dongles);
@@ -42,7 +53,7 @@ void	free_dongles(t_dongle *dongles, int nb_dongles)
 	{
 		if (pthread_mutex_destroy(&dongles[i].lock) != 0)
 			fprintf(stderr, "Failed to destroy mutex of dongle %d.\n", i);
-		if (pthread_cond_destroy(&dongles[i].cond) != 0)
+		if (pthread_cond_destroy(&dongles[i].cd_cond) != 0)
 			fprintf(stderr, "Failed to destroy cond of dongle %d.\n", i);
 		i++;
 	}

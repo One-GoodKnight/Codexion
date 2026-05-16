@@ -8,6 +8,25 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+static bool	ended(t_codexion *codexion)
+{
+	bool	end;
+
+	pthread_mutex_lock(&codexion->end_lock);
+	end = codexion->end;
+	pthread_mutex_unlock(&codexion->end_lock);
+	return (end);
+}
+
+static void	take_dongle(t_coder *coder, t_dongle *dongle)
+{
+	pthread_mutex_lock(&dongle->lock);
+	pthread_cond_wait(&dongle->cd_cond, &dongle->lock);
+	if (ended(coder->codexion))
+		return ;
+	ft_printf(coder, TAKING_DONGLE);
+}
+
 static void	take_dongles(t_coder *coder)
 {
 	t_dongle	*first_dongle;
@@ -23,23 +42,32 @@ static void	take_dongles(t_coder *coder)
 		first_dongle = coder->dongle_pair.right;
 		second_dongle = coder->dongle_pair.left;
 	}
-	pthread_mutex_lock(&first_dongle->lock);
-	pthread_cond_wait(&first_dongle->cond, &first_dongle->lock);
-	ft_printf(coder, TAKING_DONGLE);
-	pthread_mutex_lock(&second_dongle->lock);
-	pthread_cond_wait(&second_dongle->cond, &second_dongle->lock);
-	ft_printf(coder, TAKING_DONGLE);
+	take_dongle(coder, first_dongle);
+	if (ended(coder->codexion))
+		return ;
+	take_dongle(coder, second_dongle);
 }
 
 static void	*routine(void *arg)
 {
-	t_coder	*coder;
+	t_coder		*coder;
+	t_codexion	*codexion;
 
 	coder = (t_coder *)arg;
-	take_dongles(coder);
-	compile(coder);
-	debug(coder);
-	refactor(coder);
+	codexion = coder->codexion;
+	while (!ended(codexion))
+	{
+		take_dongles(coder);
+		if (ended(codexion))
+			return (NULL);
+		compile(coder);
+		if (ended(codexion))
+			return (NULL);
+		debug(coder);
+		if (ended(codexion))
+			return (NULL);
+		refactor(coder);
+	}
 	return (NULL);
 }
 
