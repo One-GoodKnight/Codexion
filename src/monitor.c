@@ -91,8 +91,13 @@ void	monitor(t_codexion *codexion)
 		{
 			if (burnout(codexion, &codexion->coders[i]))
 				return (release_threads(codexion));
-			if (compiles_required(codexion))
+			i++;
+		}
+		if (compiles_required(codexion))
 				return (release_threads(codexion));
+		i = 0;
+		while (i < codexion->args.number_of_coders)
+		{
 			broadcast_if_needed(ft_get_time(), &codexion->dongles[i]);
 			i++;
 		}
