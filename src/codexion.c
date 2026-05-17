@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:55:46 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/16 15:03:12 by aginiaux         ###   ########.fr       */
+/*   Updated: 2026/05/17 05:57:15 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,18 @@ static void	get_dongle_pairs(t_codexion *codexion)
 	{
 		codexion->coders[i].dongle_pair.left = &codexion->dongles[i];
 		codexion->coders[i].dongle_pair.right = &codexion->dongles[i - 1];
+		i++;
+	}
+	i = 0;
+	while (i <= max_i)
+	{
+		codexion->coders[i].dongle_pair.first = codexion->coders[i].dongle_pair.right;
+		codexion->coders[i].dongle_pair.second = codexion->coders[i].dongle_pair.left;
+		if (codexion->coders[i].id % 2 == 0)
+		{
+			codexion->coders[i].dongle_pair.first = codexion->coders[i].dongle_pair.left;
+			codexion->coders[i].dongle_pair.second = codexion->coders[i].dongle_pair.right;
+		}
 		i++;
 	}
 }

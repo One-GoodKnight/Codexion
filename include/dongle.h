@@ -16,6 +16,8 @@ typedef struct s_dongle_pair
 {
 	t_dongle	*left;
 	t_dongle	*right;
+	t_dongle	*first;
+	t_dongle	*second;
 }	t_dongle_pair;
 
 t_dongle	*init_dongles(int number_of_dongles);

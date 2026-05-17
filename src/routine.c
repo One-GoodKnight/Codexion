@@ -29,30 +29,17 @@ static void	take_dongle(t_coder *coder, t_dongle *dongle)
 
 static void	take_dongles(t_coder *coder)
 {
-	t_dongle	*first_dongle;
-	t_dongle	*second_dongle;
-
-	if (coder->id % 2 == 0)
-	{
-		first_dongle = coder->dongle_pair.left;
-		second_dongle = coder->dongle_pair.right;
-	}
-	else
-	{
-		first_dongle = coder->dongle_pair.right;
-		second_dongle = coder->dongle_pair.left;
-	}
-	take_dongle(coder, first_dongle);
+	take_dongle(coder, coder->dongle_pair.first);
 	if (ended(coder->codexion))
 	{
-		pthread_mutex_unlock(&first_dongle->lock);
+		pthread_mutex_unlock(&coder->dongle_pair.first->lock);
 		return ;
 	}
-	take_dongle(coder, second_dongle);
+	take_dongle(coder, coder->dongle_pair.second);
 	if (ended(coder->codexion))
 	{
-		pthread_mutex_unlock(&first_dongle->lock);
-		pthread_mutex_unlock(&second_dongle->lock);
+		pthread_mutex_unlock(&coder->dongle_pair.first->lock);
+		pthread_mutex_unlock(&coder->dongle_pair.second->lock);
 	}
 }
 
