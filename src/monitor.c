@@ -61,6 +61,6 @@ void	monitor(t_codexion *codexion)
 			broadcast_if_needed(ft_get_time(), &codexion->dongles[i]);
 			i++;
 		}
-		ft_usleep(50);
+		ft_usleep(100);
 	}
 }
