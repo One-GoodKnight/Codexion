@@ -86,7 +86,7 @@ static void	*routine(void *arg)
 static void	single_coder_edge_case(t_coder *coder)
 {
 	ft_printf(coder, TAKING_DONGLE);
-	ft_msleep(coder->codexion->args.time_to_burnout);
+	ft_msleep(coder->codexion, coder->codexion->args.time_to_burnout);
 	ft_printf(coder, BURNOUT);
 }
 

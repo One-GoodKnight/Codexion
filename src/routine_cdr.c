@@ -27,7 +27,7 @@ void	compile(t_coder *coder)
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
 	coder->last_compile_time = ft_get_time();
 	pthread_mutex_unlock(&coder->compile_time_or_count_lock);
-	ft_msleep(codexion->args.time_to_compile);
+	ft_msleep(codexion, codexion->args.time_to_compile);
 	release_dongles(coder);
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
 	coder->compile_count++;
@@ -37,11 +37,11 @@ void	compile(t_coder *coder)
 void	debug(t_coder *coder)
 {
 	ft_printf(coder, DEBUGGING);
-	ft_msleep(coder->codexion->args.time_to_debug);
+	ft_msleep(coder->codexion, coder->codexion->args.time_to_debug);
 }
 
 void	refactor(t_coder *coder)
 {
 	ft_printf(coder, REFACTORING);
-	ft_msleep(coder->codexion->args.time_to_refactor);
+	ft_msleep(coder->codexion, coder->codexion->args.time_to_refactor);
 }
