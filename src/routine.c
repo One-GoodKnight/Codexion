@@ -112,4 +112,6 @@ void	start_routines(t_codexion *codexion)
 			fprintf(stderr, "Failed to join thread of coder %d\n", j);
 		j++;
 	}
+	if (codexion->burned_out_coder)
+		ft_printf(codexion->burned_out_coder, BURNOUT);
 }

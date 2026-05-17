@@ -16,7 +16,6 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 		pthread_mutex_lock(&codexion->end_lock);
 		codexion->end = true;
 		pthread_mutex_unlock(&codexion->end_lock);
-		ft_printf(coder, BURNOUT);
 		i = 0;
 		while (i < codexion->args.number_of_coders)
 		{
@@ -25,6 +24,7 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 			pthread_mutex_unlock(&codexion->dongles[i].cd_lock);
 			i++;
 		}
+		codexion->burned_out_coder = coder;
 		return (true);
 	}
 	return (false);

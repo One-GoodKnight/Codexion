@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:55:46 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/17 07:12:15 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/17 07:31:22 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ static void	destroy_mutex(t_codexion *codexion)
 
 int	init_codexion(t_codexion *codexion)
 {
+	codexion->burned_out_coder = NULL;
 	if (init_mutex(codexion) == -1)
 		return (-1);
 	codexion->coders = init_coders(codexion);

@@ -13,6 +13,7 @@ typedef struct s_codexion
 	long long		start_time;
 	t_args			args;
 	t_coder			*coders;
+	t_coder			*burned_out_coder;
 	t_dongle		*dongles;
 	pthread_mutex_t	print_lock;
 	bool			end;
