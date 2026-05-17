@@ -89,9 +89,8 @@ void	monitor(t_codexion *codexion)
 		i = 0;
 		while (i < codexion->args.number_of_coders)
 		{
-			if (burnout(codexion, &codexion->coders[i]))
+			if (burnout(codexion, &codexion->coders[i++]))
 				return (release_threads(codexion));
-			i++;
 		}
 		if (compiles_required(codexion))
 				return (release_threads(codexion));
