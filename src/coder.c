@@ -20,7 +20,7 @@ t_coder	*init_coders(t_codexion *codexion)
 	i = 0;
 	while (i < nb_coders)
 	{
-		if (pthread_mutex_init(&coders[i].lock, NULL) != 0)
+		if (pthread_mutex_init(&coders[i].compile_time_or_count_lock, NULL) != 0)
 		{
 			free_coders(coders, nb_coders);
 			return (NULL);
@@ -40,8 +40,8 @@ void	free_coders(t_coder *coders, int nb_coders)
 	i = 0;
 	while (i < nb_coders)
 	{
-		if (pthread_mutex_destroy(&coders[i].lock) != 0)
-			fprintf(stderr, "Failed to destroy compile count mutex of coder %d.\n", i);
+		if (pthread_mutex_destroy(&coders[i].compile_time_or_count_lock) != 0)
+			fprintf(stderr, "Failed to destroy compile_time_or_count mutex of coder %d.\n", i);
 		i++;
 	}
 	free(coders);
