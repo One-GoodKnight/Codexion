@@ -30,11 +30,37 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 		pthread_mutex_lock(&codexion->end_lock);
 		codexion->end = true;
 		pthread_mutex_unlock(&codexion->end_lock);
-		release_threads(codexion);
 		codexion->burned_out_coder = coder;
 		return (true);
 	}
 	return (false);
+}
+
+static bool	compiles_required(t_codexion *codexion)
+{
+	t_coder	*coder;
+	bool	required;
+	int		i;
+
+	required = true;
+	i = 0;
+	while (i < codexion->args.number_of_coders)
+	{
+		coder = &codexion->coders[i];
+		pthread_mutex_lock(&coder->compile_time_or_count_lock);
+		required = coder->compile_count >= codexion->args.number_of_compiles_required;
+		pthread_mutex_unlock(&coder->compile_time_or_count_lock);
+		if (!required)
+			break ;
+		i++;
+	}
+	if (required)
+	{
+		pthread_mutex_lock(&codexion->end_lock);
+		codexion->end = true;
+		pthread_mutex_unlock(&codexion->end_lock);
+	}
+	return (required);
 }
 
 static void	broadcast_if_needed(long long time, t_dongle *dongle)
@@ -54,26 +80,6 @@ static void	broadcast_if_needed(long long time, t_dongle *dongle)
 	}
 }
 
-static bool	compiles_required(t_codexion *codexion)
-{
-	t_coder	*coder;
-	bool	required;
-	int		i;
-
-	i = 0;
-	while (i < codexion->args.number_of_coders)
-	{
-		coder = &codexion->coders[i];
-		pthread_mutex_lock(&coder->compile_time_or_count_lock);
-		required = coder->compile_count >= codexion->args.number_of_compiles_required;
-		pthread_mutex_unlock(&coder->compile_time_or_count_lock);
-		if (!required)
-			return (false);
-		i++;
-	}
-	return (true);
-}
-
 void	monitor(t_codexion *codexion)
 {
 	int			i;
@@ -84,15 +90,9 @@ void	monitor(t_codexion *codexion)
 		while (i < codexion->args.number_of_coders)
 		{
 			if (burnout(codexion, &codexion->coders[i]))
-				return ;
+				return (release_threads(codexion));
 			if (compiles_required(codexion))
-			{
-				pthread_mutex_lock(&codexion->end_lock);
-				codexion->end = true;
-				pthread_mutex_unlock(&codexion->end_lock);
-				release_threads(codexion);
-				return ;
-			}
+				return (release_threads(codexion));
 			broadcast_if_needed(ft_get_time(), &codexion->dongles[i]);
 			i++;
 		}
