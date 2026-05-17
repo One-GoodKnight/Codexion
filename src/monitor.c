@@ -5,12 +5,24 @@
 
 static bool	burnout(t_codexion *codexion, t_coder *coder)
 {
-	if (coder->last_compile_time >= ft_get_time() + codexion->args.time_to_burnout)
+	bool	burnout;
+	int		i;
+
+	pthread_mutex_lock(&coder->lock);
+	burnout = (ft_get_time() - coder->last_compile_time) / 1000 >= codexion->args.time_to_burnout;
+	pthread_mutex_unlock(&coder->lock);
+	if (burnout)
 	{
 		pthread_mutex_lock(&codexion->end_lock);
 		codexion->end = true;
 		pthread_mutex_unlock(&codexion->end_lock);
 		ft_printf(coder, BURNOUT);
+		i = 0;
+		while (i < codexion->args.number_of_coders)
+		{
+			pthread_cond_broadcast(&codexion->dongles[i].cd_cond);
+			i++;
+		}
 		return (true);
 	}
 	return (false);
@@ -23,7 +35,6 @@ void	monitor(t_codexion *codexion)
 	t_coder		*coder;
 	t_dongle	*dongle;
 
-	ft_msleep(100);
 	while (codexion->end != true)
 	{
 		time = ft_get_time();

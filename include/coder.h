@@ -22,7 +22,7 @@ typedef struct	s_coder
 	t_dongle_pair	dongle_pair;
 	long long		last_compile_time;
 	int				compile_count;
-	pthread_mutex_t	compile_count_lock;
+	pthread_mutex_t	lock;
 	t_codexion		*codexion;
 }	t_coder;
 
