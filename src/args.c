@@ -17,23 +17,18 @@ static int	parse_one(t_args *args, char **argv)
 	args->number_of_coders = ft_atoi(argv[1], &err);
 	if (err == -1 || args->number_of_coders < 0)
 		return (print_error("Error parsing: number_of_coders should be a positive int.\n"));
-
 	args->time_to_burnout = ft_atoi(argv[2], &err);
 	if (err == -1 || args->time_to_burnout < 0)
 		return (print_error("Error parsing: number_of_coders should be a positive int.\n"));
-
 	args->time_to_compile= ft_atoi(argv[3], &err);
 	if (err == -1 || args->time_to_compile < 0)
 		return (print_error("Error parsing: time_to_compile should be a positive int.\n"));
-
 	args->time_to_debug = ft_atoi(argv[4], &err);
 	if (err == -1 || args->time_to_debug < 0)
 		return (print_error("Error parsing: time_to_debug should be a positive int.\n"));
-
 	args->time_to_refactor = ft_atoi(argv[5], &err);
 	if (err == -1 || args->time_to_refactor < 0)
 		return (print_error("Error parsing: time_to_refactor should be a positive int.\n"));
-
 	return (0);
 }
 
@@ -45,11 +40,9 @@ static int	parse_two(t_args *args, char **argv)
 	args->number_of_compiles_required = ft_atoi(argv[6], &err);
 	if (err == -1 || args->number_of_compiles_required < 0)
 		return (print_error("Error parsing: number_of_compiles_required should be a positive int.\n"));
-
 	args->dongle_cooldown = ft_atoi(argv[7], &err);
 	if (err == -1 || args->dongle_cooldown < 0)
 		return (print_error("Error parsing: dongle_cooldown should be a positive int.\n"));
-
 	i = 0;
 	if (strcmp("fifo", argv[8]) == 0 || strcmp("edf", argv[8]) == 0)
 	{
@@ -62,22 +55,17 @@ static int	parse_two(t_args *args, char **argv)
 	}
 	else
 		return (print_error("Error parsing: scheduler should be either 'fifo' or 'edf'.\n"));
-
 	return (0);
 }
 
 int	parse_args(t_args *args, int argc, char **argv)
 {
-
 	if (argc != 9)
 		return (print_error("Error parsing: invalid number of arguments.\n"));
-
 	if (parse_one(args, argv) == -1)
 		return (-1);
-
 	if (parse_two(args, argv) == -1)
 		return (-1);
-	
 	return (0);
 }
 
