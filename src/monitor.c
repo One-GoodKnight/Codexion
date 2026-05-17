@@ -2,7 +2,6 @@
 #include "codexion.h"
 #include "dongle.h"
 #include "utils.h"
-#include <stdio.h>
 
 static bool	burnout(t_codexion *codexion, t_coder *coder)
 {
@@ -21,9 +20,9 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 		i = 0;
 		while (i < codexion->args.number_of_coders)
 		{
-			pthread_mutex_lock(&codexion->dongles[i].cond_lock);
+			pthread_mutex_lock(&codexion->dongles[i].cd_lock);
 			pthread_cond_broadcast(&codexion->dongles[i].cd_cond);
-			pthread_mutex_unlock(&codexion->dongles[i].cond_lock);
+			pthread_mutex_unlock(&codexion->dongles[i].cd_lock);
 			i++;
 		}
 		return (true);
@@ -56,9 +55,9 @@ void	monitor(t_codexion *codexion)
 			pthread_mutex_unlock(&dongle->when_available_lock);
 			if (broadcast)
 			{
-				pthread_mutex_lock(&dongle->cond_lock);
+				pthread_mutex_lock(&dongle->cd_lock);
 				pthread_cond_broadcast(&dongle->cd_cond);
-				pthread_mutex_unlock(&dongle->cond_lock);
+				pthread_mutex_unlock(&dongle->cd_lock);
 			}
 			i++;
 		}

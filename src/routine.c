@@ -18,14 +18,28 @@ static bool	ended(t_codexion *codexion)
 	return (end);
 }
 
+static bool	dongle_available(t_dongle *dongle)
+{
+	bool	dongle_available;
+
+	dongle_available = false;
+	pthread_mutex_lock(&dongle->when_available_lock);
+	if (ft_get_time() >= dongle->when_available)
+		dongle_available = true;
+	pthread_mutex_unlock(&dongle->when_available_lock);
+	return (dongle_available);
+}
+
 static void	take_dongle(t_coder *coder, t_dongle *dongle)
 {
 	pthread_mutex_lock(&dongle->owner_lock);
-	while (ft_get_time() < dongle->when_available)
+	while (!dongle_available(dongle))
 	{
 		if (ended(coder->codexion))
 			return ;
-		pthread_cond_wait(&dongle->cd_cond, &dongle->owner_lock);
+		pthread_mutex_lock(&dongle->cd_lock);
+		pthread_cond_wait(&dongle->cd_cond, &dongle->cd_lock);
+		pthread_mutex_unlock(&dongle->cd_lock);
 	}
 	ft_printf(coder, TAKING_DONGLE);
 }
