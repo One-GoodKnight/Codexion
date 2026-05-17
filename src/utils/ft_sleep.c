@@ -8,7 +8,7 @@ void	ft_msleep(t_codexion *codexion, int time)
 	bool		end;
 	long long	target_time;
 
-	target_time = ft_get_time() + time * 1000;
+	target_time = ft_get_time() + (long long)time * 1000;
 	while (ft_get_time() < target_time)
 	{
 		pthread_mutex_lock(&codexion->end_lock);
@@ -24,7 +24,7 @@ void	ft_usleep(int time)
 {
 	long long	target_time;
 
-	target_time = ft_get_time() + time;
+	target_time = ft_get_time() + (long long)time;
 	while (ft_get_time() < target_time)
 		usleep(10);
 }

@@ -23,7 +23,7 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 	bool	burnout;
 
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
-	burnout = (ft_get_time() - coder->last_compile_time) / 1000 >= codexion->args.time_to_burnout;
+	burnout = ft_get_time() - coder->last_compile_time >= (long long)codexion->args.time_to_burnout * 1000;
 	pthread_mutex_unlock(&coder->compile_time_or_count_lock);
 	if (burnout)
 	{
