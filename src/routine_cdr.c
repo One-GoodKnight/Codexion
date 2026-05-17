@@ -1,6 +1,7 @@
 #include "coder.h"
 #include "codexion.h"
 #include "utils.h"
+#include <pthread.h>
 
 static void	release_dongles(t_coder *coder)
 {
@@ -19,11 +20,14 @@ static void	release_dongles(t_coder *coder)
 
 void	compile(t_coder *coder)
 {
+	t_codexion	*codexion;
+
+	codexion = coder->codexion;
 	ft_printf(coder, COMPILING);
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
 	coder->last_compile_time = ft_get_time();
 	pthread_mutex_unlock(&coder->compile_time_or_count_lock);
-	ft_msleep(coder->codexion->args.time_to_compile);
+	ft_msleep(codexion->args.time_to_compile);
 	release_dongles(coder);
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
 	coder->compile_count++;
