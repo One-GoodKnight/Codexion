@@ -30,35 +30,35 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 	return (false);
 }
 
+static void	broadcast_if_needed(long long time, t_dongle *dongle)
+{
+	bool		broadcast;
+
+	broadcast = false;
+	pthread_mutex_lock(&dongle->when_available_lock);
+	if (time >= dongle->when_available)
+		broadcast = true;
+	pthread_mutex_unlock(&dongle->when_available_lock);
+	if (broadcast)
+	{
+		pthread_mutex_lock(&dongle->cd_lock);
+		pthread_cond_broadcast(&dongle->cd_cond);
+		pthread_mutex_unlock(&dongle->cd_lock);
+	}
+}
+
 void	monitor(t_codexion *codexion)
 {
-	long long	time;
 	int			i;
-	t_coder		*coder;
-	t_dongle	*dongle;
-	bool		broadcast;
 
 	while (codexion->end != true)
 	{
-		time = ft_get_time();
 		i = 0;
 		while (i < codexion->args.number_of_coders)
 		{
-			coder = &codexion->coders[i];
-			if (burnout(codexion, coder))
+			if (burnout(codexion, &codexion->coders[i]))
 				return ;
-			dongle = &codexion->dongles[i];
-			broadcast = false;
-			pthread_mutex_lock(&dongle->when_available_lock);
-			if (time >= dongle->when_available)
-				broadcast = true;
-			pthread_mutex_unlock(&dongle->when_available_lock);
-			if (broadcast)
-			{
-				pthread_mutex_lock(&dongle->cd_lock);
-				pthread_cond_broadcast(&dongle->cd_cond);
-				pthread_mutex_unlock(&dongle->cd_lock);
-			}
+			broadcast_if_needed(ft_get_time(), &codexion->dongles[i]);
 			i++;
 		}
 		ft_usleep(50);
