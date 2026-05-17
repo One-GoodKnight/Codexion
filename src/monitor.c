@@ -2,6 +2,7 @@
 #include "codexion.h"
 #include "dongle.h"
 #include "utils.h"
+#include <stdio.h>
 
 static bool	burnout(t_codexion *codexion, t_coder *coder)
 {
@@ -46,7 +47,7 @@ void	monitor(t_codexion *codexion)
 				return ;
 			dongle = &codexion->dongles[i];
 			pthread_mutex_lock(&dongle->when_available_lock);
-			if (dongle->when_available < time)
+			if (time >= dongle->when_available)
 				pthread_cond_broadcast(&dongle->cd_cond);
 			pthread_mutex_unlock(&dongle->when_available_lock);
 			i++;

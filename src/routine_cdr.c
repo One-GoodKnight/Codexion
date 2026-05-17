@@ -14,8 +14,8 @@ void	compile(t_coder *coder)
 	ft_msleep(codexion->args.time_to_compile);
 	pthread_mutex_lock(&coder->dongle_pair.left->when_available_lock);
 	pthread_mutex_lock(&coder->dongle_pair.right->when_available_lock);
-	coder->dongle_pair.left->when_available = codexion->args.dongle_cooldown * 1000;
-	coder->dongle_pair.right->when_available = codexion->args.dongle_cooldown * 1000;
+	coder->dongle_pair.left->when_available = ft_get_time() + codexion->args.dongle_cooldown * 1000;
+	coder->dongle_pair.right->when_available = ft_get_time() + codexion->args.dongle_cooldown * 1000;
 	pthread_mutex_unlock(&coder->dongle_pair.left->when_available_lock);
 	pthread_mutex_unlock(&coder->dongle_pair.right->when_available_lock);
 	pthread_mutex_unlock(&coder->dongle_pair.left->lock);
