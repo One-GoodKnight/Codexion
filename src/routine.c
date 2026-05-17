@@ -20,12 +20,12 @@ static bool	ended(t_codexion *codexion)
 
 static void	take_dongle(t_coder *coder, t_dongle *dongle)
 {
-	pthread_mutex_lock(&dongle->lock);
+	pthread_mutex_lock(&dongle->owner_lock);
 	while (ft_get_time() < dongle->when_available)
 	{
 		if (ended(coder->codexion))
 			return ;
-		pthread_cond_wait(&dongle->cd_cond, &dongle->lock);
+		pthread_cond_wait(&dongle->cd_cond, &dongle->owner_lock);
 	}
 	ft_printf(coder, TAKING_DONGLE);
 }
@@ -35,14 +35,14 @@ static void	take_dongles(t_coder *coder)
 	take_dongle(coder, coder->dongle_pair.first);
 	if (ended(coder->codexion))
 	{
-		pthread_mutex_unlock(&coder->dongle_pair.first->lock);
+		pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
 		return ;
 	}
 	take_dongle(coder, coder->dongle_pair.second);
 	if (ended(coder->codexion))
 	{
-		pthread_mutex_unlock(&coder->dongle_pair.first->lock);
-		pthread_mutex_unlock(&coder->dongle_pair.second->lock);
+		pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
+		pthread_mutex_unlock(&coder->dongle_pair.second->owner_lock);
 	}
 }
 

@@ -18,8 +18,8 @@ void	compile(t_coder *coder)
 	coder->dongle_pair.second->when_available = ft_get_time() + codexion->args.dongle_cooldown * 1000;
 	pthread_mutex_unlock(&coder->dongle_pair.second->when_available_lock);
 	pthread_mutex_unlock(&coder->dongle_pair.first->when_available_lock);
-	pthread_mutex_unlock(&coder->dongle_pair.second->lock);
-	pthread_mutex_unlock(&coder->dongle_pair.first->lock);
+	pthread_mutex_unlock(&coder->dongle_pair.second->owner_lock);
+	pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
 	pthread_mutex_lock(&coder->lock);
 	coder->compile_count++;
 	pthread_mutex_unlock(&coder->lock);
