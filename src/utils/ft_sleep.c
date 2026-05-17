@@ -16,5 +16,5 @@ void	ft_usleep(int time)
 
 	target_time = ft_get_time() + time;
 	while (ft_get_time() < target_time)
-		usleep(10);
+		usleep(1);
 }

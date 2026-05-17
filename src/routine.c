@@ -21,9 +21,12 @@ static bool	ended(t_codexion *codexion)
 static void	take_dongle(t_coder *coder, t_dongle *dongle)
 {
 	pthread_mutex_lock(&dongle->lock);
-	pthread_cond_wait(&dongle->cd_cond, &dongle->lock);
-	if (ended(coder->codexion))
-		return ;
+	while (ft_get_time() < dongle->when_available)
+	{
+		if (ended(coder->codexion))
+			return ;
+		pthread_cond_wait(&dongle->cd_cond, &dongle->lock);
+	}
 	ft_printf(coder, TAKING_DONGLE);
 }
 

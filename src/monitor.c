@@ -35,6 +35,7 @@ void	monitor(t_codexion *codexion)
 	int			i;
 	t_coder		*coder;
 	t_dongle	*dongle;
+	bool		broadcast;
 
 	while (codexion->end != true)
 	{
@@ -46,12 +47,19 @@ void	monitor(t_codexion *codexion)
 			if (burnout(codexion, coder))
 				return ;
 			dongle = &codexion->dongles[i];
+			broadcast = false;
 			pthread_mutex_lock(&dongle->when_available_lock);
 			if (time >= dongle->when_available)
-				pthread_cond_broadcast(&dongle->cd_cond);
+				broadcast = true;
 			pthread_mutex_unlock(&dongle->when_available_lock);
+			if (broadcast)
+			{
+				pthread_mutex_lock(&dongle->lock);
+				pthread_cond_broadcast(&dongle->cd_cond);
+				pthread_mutex_unlock(&dongle->lock);
+			}
 			i++;
 		}
-		ft_usleep(10);
+		ft_usleep(50);
 	}
 }
