@@ -3,6 +3,11 @@ BUILD_DIR		:= .build
 
 SRC_DIR			:= src
 SRCS			:= 								\
+	monitor/burnout.c							\
+	monitor/compiles_required.c					\
+	monitor/monitor.c							\
+	monitor/release_threads.c					\
+												\
 	queue/q_utils.c								\
 	queue/queue.c								\
 												\
@@ -22,7 +27,6 @@ SRCS			:= 								\
 	codexion.c									\
 	dongle.c									\
 	main.c										\
-	monitor.c									\
 
 INCLUDES		:= 								\
 	include										\

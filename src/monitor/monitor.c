@@ -6,79 +6,16 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:57:33 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:52:45 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "monitor.h"
 #include "coder.h"
 #include "codexion.h"
 #include "dongle.h"
 #include "queue.h"
 #include "utils.h"
-#include <pthread.h>
-
-static void	release_threads(t_codexion *codexion)
-{
-	int		i;
-
-	i = 0;
-	while (i < codexion->args.number_of_coders)
-	{
-		pthread_mutex_lock(&codexion->dongles[i].owner_id_lock);
-		pthread_cond_broadcast(&codexion->dongles[i].owner_cond);
-		pthread_mutex_unlock(&codexion->dongles[i].owner_id_lock);
-		i++;
-	}
-}
-
-static bool	burnout(t_codexion *codexion, t_coder *coder)
-{
-	bool		burnout;
-	long long	burnout_time_usec;
-
-	pthread_mutex_lock(&coder->comp_start_or_count_lock);
-	burnout_time_usec = (long long)codexion->args.time_to_burnout * 1000;
-	burnout = ft_get_time() - coder->last_compile_start >= burnout_time_usec;
-	pthread_mutex_unlock(&coder->comp_start_or_count_lock);
-	if (burnout)
-	{
-		pthread_mutex_lock(&codexion->end_lock);
-		codexion->end = true;
-		pthread_mutex_unlock(&codexion->end_lock);
-		codexion->burned_out_coder = coder;
-		return (true);
-	}
-	return (false);
-}
-
-static bool	compiles_required(t_codexion *codexion)
-{
-	t_coder	*coder;
-	bool	required;
-	int		compiles_required;
-	int		i;
-
-	required = true;
-	i = 0;
-	while (i < codexion->args.number_of_coders)
-	{
-		coder = &codexion->coders[i];
-		pthread_mutex_lock(&coder->comp_start_or_count_lock);
-		compiles_required = codexion->args.number_of_compiles_required;
-		required = coder->compile_count >= compiles_required;
-		pthread_mutex_unlock(&coder->comp_start_or_count_lock);
-		if (!required)
-			break ;
-		i++;
-	}
-	if (required)
-	{
-		pthread_mutex_lock(&codexion->end_lock);
-		codexion->end = true;
-		pthread_mutex_unlock(&codexion->end_lock);
-	}
-	return (required);
-}
 
 static void	broadcast(long long time, t_dongle *dongle)
 {
@@ -106,6 +43,7 @@ static void	broadcast(long long time, t_dongle *dongle)
 	pthread_mutex_unlock(&dongle->owner_id_lock);
 }
 
+#include "stdio.h"
 void	monitor(t_codexion *codexion)
 {
 	int			i;

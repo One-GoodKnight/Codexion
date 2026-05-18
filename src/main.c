@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:36 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:51:39 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:49:22 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	main(int argc, char **argv)
 
 	if (parse_args(&codexion.args, argc, argv) == -1)
 		return (-1);
-	display_args(&codexion.args);
 	if (codexion.args.number_of_coders == 0
 		|| codexion.args.number_of_compiles_required == 0)
 		return (0);

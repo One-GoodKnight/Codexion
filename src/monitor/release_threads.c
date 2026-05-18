@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor.h                                          :+:      :+:    :+:   */
+/*   release_threads.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/18 18:49:02 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:42:39 by aginiaux         ###   ########lyon.fr   */
+/*   Created: 2026/05/18 19:45:29 by aginiaux          #+#    #+#             */
+/*   Updated: 2026/05/18 19:45:30 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MONITOR_H
-# define MONITOR_H
+#include "codexion.h"
+#include "dongle.h"
 
-# include "codexion.h"
+void	release_threads(t_codexion *codexion)
+{
+	int		i;
 
-void	monitor(t_codexion *codexion);
-
-void	release_threads(t_codexion *codexion);
-bool	burnout(t_codexion *codexion, t_coder *coder);
-bool	compiles_required(t_codexion *codexion);
-
-#endif
+	i = 0;
+	while (i < codexion->args.number_of_coders)
+	{
+		pthread_mutex_lock(&codexion->dongles[i].owner_id_lock);
+		pthread_cond_broadcast(&codexion->dongles[i].owner_cond);
+		pthread_mutex_unlock(&codexion->dongles[i].owner_id_lock);
+		i++;
+	}
+}

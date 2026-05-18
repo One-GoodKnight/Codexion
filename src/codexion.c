@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:55:46 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:16:42 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 20:25:31 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,30 +18,34 @@
 
 static void	get_dongle_pairs(t_codexion *codexion)
 {
-	t_dongle_pair	*pair;
-	int				i;
-	int				max_i;
+	int	i;
+	int	max_i;
 
 	max_i = codexion->args.number_of_coders - 1;
-	pair = &codexion->coders[0].dongle_pair;
-	pair->left = &codexion->dongles[0];
-	pair->right = &codexion->dongles[max_i];
+	codexion->coders[0].dongle_pair.left = &codexion->dongles[0];
+	codexion->coders[0].dongle_pair.right = &codexion->dongles[max_i];
 	i = 1;
 	while (i <= max_i)
 	{
-		pair = &codexion->coders[i].dongle_pair;
-		pair->left = &codexion->dongles[i];
-		pair->right = &codexion->dongles[i - 1];
-		pair->first = pair->left;
-		pair->second = pair->right;
-		if (codexion->coders[i].id % 2 == 1)
+		codexion->coders[i].dongle_pair.left = &codexion->dongles[i];
+		codexion->coders[i].dongle_pair.right = &codexion->dongles[i - 1];
+		i++;
+	}
+	i = 0;
+	while (i <= max_i)
+	{
+		codexion->coders[i].dongle_pair.first = codexion->coders[i].dongle_pair.right;
+		codexion->coders[i].dongle_pair.second = codexion->coders[i].dongle_pair.left;
+		if (codexion->coders[i].id % 2 == 0)
 		{
-			pair->first = pair->right;
-			pair->second = pair->left;
+			codexion->coders[i].dongle_pair.first = codexion->coders[i].dongle_pair.left;
+			codexion->coders[i].dongle_pair.second = codexion->coders[i].dongle_pair.right;
 		}
 		i++;
 	}
 }
+
+
 
 static int	init_mutex(t_codexion *codexion)
 {
