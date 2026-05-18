@@ -1,4 +1,5 @@
 #include "queue.h"
+#include "utils.h"
 
 void	heapify_last_request(t_queue *queue)
 {
@@ -18,20 +19,11 @@ void	heapify_first_request(t_queue *queue)
 {
 }
 
-void	swap_root_tail(t_queue *queue)
+void	swap_requests(t_queue *queue, int one, int two)
 {
 	t_request	temp;
-	t_request	*root;
-	t_request	*tail;
 
-	if (queue->last_i == -1)
-		return ;
-	root = &queue->requests[0];
-	tail = &queue->requests[queue->last_i];
-	temp.coder = root->coder;
-	temp.value = root->value;
-	root->coder = tail->coder;
-	root->value = tail->value;
-	tail->coder = temp.coder;
-	tail->value = temp.value;
+	ft_memcpy(&temp, &queue->requests[one], sizeof(t_request));
+	ft_memcpy(&queue->requests[one], &queue->requests[two], sizeof(t_request));
+	ft_memcpy(&queue->requests[two], &temp, sizeof(t_request));
 }
