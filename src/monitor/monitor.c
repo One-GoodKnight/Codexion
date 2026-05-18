@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 20:36:22 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 20:42:50 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,42 @@
 #include "queue.h"
 #include "utils.h"
 
-static void	broadcast(long long time, t_dongle *dongle)
+static bool	dongle_available(long long time, t_dongle *dongle)
 {
 	bool	dongle_available;
-	t_coder	*coder;
 
 	pthread_mutex_lock(&dongle->owner_id_lock);
 	dongle_available = (dongle->owner_id == -1);
 	pthread_mutex_unlock(&dongle->owner_id_lock);
 	if (!dongle_available)
-		return ;
+		return (false);
 	pthread_mutex_lock(&dongle->when_available_lock);
 	dongle_available = (time >= dongle->when_available);
 	pthread_mutex_unlock(&dongle->when_available_lock);
 	if (!dongle_available)
-		return ;
+		return (false);
+	return (true);
+}
+
+static t_coder	*retrieve_coder_in_q(t_dongle *dongle)
+{
+	t_coder	*coder;
+
 	pthread_mutex_lock(&dongle->queue.lock);
 	coder = q_extract(&dongle->queue);
 	pthread_mutex_unlock(&dongle->queue.lock);
+	if (!coder)
+		return (NULL);
+	return (coder);
+}
+
+static void	broadcast(long long time, t_dongle *dongle)
+{
+	t_coder	*coder;
+
+	if (!dongle_available(time, dongle))
+		return ;
+	coder = retrieve_coder_in_q(dongle);
 	if (!coder)
 		return ;
 	pthread_mutex_lock(&dongle->owner_id_lock);
