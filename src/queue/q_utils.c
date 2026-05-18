@@ -39,7 +39,7 @@ void	heapify_first_request(t_queue *queue)
 		i_left_child = i * 2 + 1;
 		if (i_left_child > queue->last_i)
 			return ;
-		i_right_child = i * 2 + 1;
+		i_right_child = i * 2 + 2;
 		if (queue->requests[i_left_child].value <= queue->requests[i_right_child].value)
 			i_smallest_child = i_left_child;
 		else

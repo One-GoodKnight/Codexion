@@ -10,7 +10,7 @@ int	q_init(t_queue *queue, char *mode)
 	memset(queue, 0, sizeof(t_request) * QUEUE_SIZE);
 	queue->last_i = -1;
 	queue->max_i = QUEUE_SIZE - 1;
-	if (strcmp(mode, "fifo"))
+	if (strcmp(mode, "fifo") == 0)
 		queue->mode = FIFO;
 	else
 		queue->mode = EDF;
@@ -43,5 +43,6 @@ t_coder	*q_extract(t_queue *queue)
 	swap_requests(queue, 0, queue->last_i);
 	min_request = &queue->requests[queue->last_i];
 	queue->last_i--;
+	heapify_first_request(queue);
 	return (min_request->coder);
 }
