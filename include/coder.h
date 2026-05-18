@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:48:53 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:48:54 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:30:54 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include "dongle.h"
 # include <pthread.h>
 
-typedef struct s_codexion t_codexion;
+typedef struct s_codexion	t_codexion;
 
-typedef enum	e_state
+typedef enum e_state
 {
 	TAKING_DONGLE,
 	COMPILING,
@@ -27,7 +27,7 @@ typedef enum	e_state
 	BURNOUT,
 }	t_state;
 
-typedef struct	s_coder
+typedef struct s_coder
 {
 	pthread_t		thread;
 	int				id;

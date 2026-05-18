@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:30:23 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:22:21 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:27:15 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	q_init(t_queue *queue, char *mode)
 void	q_insert(t_queue *queue, t_coder *coder)
 {
 	long long	value;
+	long long	burnout_time;
+	long long	deadline;
 
 	if (queue->last_i >= queue->max_i)
 	{
@@ -46,7 +48,11 @@ void	q_insert(t_queue *queue, t_coder *coder)
 	if (queue->mode == FIFO)
 		value = ft_get_time();
 	else
-		value = coder->last_compile_start + coder->codexion->args.time_to_burnout;
+	{
+		burnout_time = coder->codexion->args.time_to_burnout;
+		deadline = coder->last_compile_start + burnout_time;
+		value = deadline;
+	}
 	queue->requests[queue->last_i].value = value;
 	heapify_last_request(queue);
 }

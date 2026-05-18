@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:49:06 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:49:07 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:31:23 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@
 
 # define QUEUE_SIZE 2
 
-typedef struct s_coder t_coder;
+typedef struct s_coder	t_coder;
 
-typedef enum	e_mode
+typedef enum e_mode
 {
 	FIFO,
 	EDF,
 }	t_mode;
 
-typedef struct	s_request
+typedef struct s_request
 {
 	t_coder		*coder;
 	long long	value;
 }	t_request;
 
-typedef struct	s_queue
+typedef struct s_queue
 {
 	t_request		requests[QUEUE_SIZE];
 	int				last_i;

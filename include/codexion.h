@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:48:56 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:48:57 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:30:30 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <pthread.h>
 # include <stdbool.h>
 
-typedef struct s_coder t_coder;
-typedef struct s_dongle t_dongle;
+typedef struct s_coder	t_coder;
+typedef struct s_dongle	t_dongle;
 
 typedef struct s_codexion
 {

@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:30:26 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:30:27 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:30:12 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	heapify_last_request(t_queue *queue)
 	}
 }
 
-void	heapify_first_request(t_queue *queue)
+void	heapify_first_request(t_queue *q)
 {
 	int	i;
 	int	i_left_child;
@@ -46,17 +46,17 @@ void	heapify_first_request(t_queue *queue)
 	int	i_smallest_child;
 
 	i = 0;
-	while (i < queue->last_i)
+	while (i < q->last_i)
 	{
 		i_left_child = i * 2 + 1;
-		if (i_left_child > queue->last_i)
+		if (i_left_child > q->last_i)
 			return ;
 		i_right_child = i * 2 + 2;
-		if (queue->requests[i_left_child].value <= queue->requests[i_right_child].value)
+		if (q->requests[i_left_child].value <= q->requests[i_right_child].value)
 			i_smallest_child = i_left_child;
 		else
 			i_smallest_child = i_right_child;
-		swap_requests(queue, i_smallest_child, i);
+		swap_requests(q, i_smallest_child, i);
 		i = i_smallest_child;
 	}
 }
