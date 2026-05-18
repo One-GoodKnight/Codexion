@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitor.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
+/*   Updated: 2026/05/18 18:29:28 by aginiaux         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "coder.h"
 #include "codexion.h"
 #include "dongle.h"
 #include "queue.h"
 #include "utils.h"
 #include <pthread.h>
-#include <stdio.h>
 
 static void	release_threads(t_codexion *codexion)
 {

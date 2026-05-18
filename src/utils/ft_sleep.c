@@ -1,7 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_sleep.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/18 18:30:12 by aginiaux          #+#    #+#             */
+/*   Updated: 2026/05/18 18:30:17 by aginiaux         ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "codexion.h"
 #include "utils.h"
 #include <pthread.h>
-#include <time.h>
 #include <unistd.h>
 
 void	ft_msleep(t_codexion *codexion, int time)
