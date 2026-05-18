@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:16 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:40:13 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:20:29 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ void	start_routines(t_codexion *codexion)
 	i = 0;
 	while (i < codexion->args.number_of_coders)
 	{
-		if (pthread_create(&codexion->coders[i].thread, NULL, &routine, &codexion->coders[i]) != 0)
+		if (pthread_create(&codexion->coders[i].thread, NULL,
+				&routine, &codexion->coders[i]) != 0)
 			break ;
 		i++;
 	}

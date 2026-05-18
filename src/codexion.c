@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 14:55:46 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:15:39 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:16:42 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ int	init_codexion(t_codexion *codexion)
 		destroy_mutex(codexion);
 		return (-1);
 	}
-	codexion->dongles = init_dongles(codexion->args.number_of_coders, codexion->args.scheduler);
+	codexion->dongles = init_dongles(codexion->args.number_of_coders,
+			codexion->args.scheduler);
 	if (!codexion->dongles)
 	{
 		destroy_mutex(codexion);

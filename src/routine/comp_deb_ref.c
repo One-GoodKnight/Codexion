@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:32 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:47:12 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 19:19:51 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,15 @@
 static void	release_dongles(t_coder *coder)
 {
 	t_codexion	*codexion;
+	long long	dong_when_available;
 
 	codexion = coder->codexion;
 	pthread_mutex_lock(&coder->dongle_pair.first->when_available_lock);
 	pthread_mutex_lock(&coder->dongle_pair.second->when_available_lock);
-	coder->dongle_pair.first->when_available = ft_get_time() + (long long)codexion->args.dongle_cooldown * 1000;
-	coder->dongle_pair.second->when_available = ft_get_time() + (long long)codexion->args.dongle_cooldown * 1000;
+	dong_when_available = ft_get_time() + \
+(long long)codexion->args.dongle_cooldown * 1000;
+	coder->dongle_pair.first->when_available = dong_when_available;
+	coder->dongle_pair.second->when_available = dong_when_available;
 	pthread_mutex_unlock(&coder->dongle_pair.second->when_available_lock);
 	pthread_mutex_unlock(&coder->dongle_pair.first->when_available_lock);
 	pthread_mutex_lock(&coder->dongle_pair.first->owner_id_lock);
