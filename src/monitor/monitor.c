@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:52:45 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 20:36:22 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ static void	broadcast(long long time, t_dongle *dongle)
 	pthread_mutex_unlock(&dongle->owner_id_lock);
 }
 
-#include "stdio.h"
 void	monitor(t_codexion *codexion)
 {
 	int			i;
