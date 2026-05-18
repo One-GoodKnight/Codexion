@@ -1,9 +1,9 @@
 #ifndef QUEUE_H
 # define QUEUE_H
 
-# include "coder.h"
-
 # define QUEUE_SIZE 2
+
+typedef struct s_coder t_coder;
 
 typedef enum	e_mode
 {
@@ -25,7 +25,7 @@ typedef struct	s_queue
 	t_mode		mode;
 }	t_queue;
 
-int		q_init(t_queue *queue, char *mode);
+void	q_init(t_queue *queue, char *mode);
 void	q_insert(t_queue *queue, t_coder *coder);
 t_coder	*q_extract(t_queue *queue);
 

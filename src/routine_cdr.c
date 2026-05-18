@@ -25,7 +25,7 @@ void	compile(t_coder *coder)
 	codexion = coder->codexion;
 	ft_printf(coder, COMPILING);
 	pthread_mutex_lock(&coder->compile_time_or_count_lock);
-	coder->last_compile_time = ft_get_time();
+	coder->last_compile_start = ft_get_time();
 	pthread_mutex_unlock(&coder->compile_time_or_count_lock);
 	ft_msleep(codexion, codexion->args.time_to_compile);
 	release_dongles(coder);

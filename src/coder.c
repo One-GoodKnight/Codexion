@@ -26,7 +26,7 @@ t_coder	*init_coders(t_codexion *codexion)
 			return (NULL);
 		}
 		coders[i].id = i;
-		coders[i].last_compile_time = ft_get_time();
+		coders[i].last_compile_start = ft_get_time();
 		coders[i].codexion = codexion;
 		i++;
 	}

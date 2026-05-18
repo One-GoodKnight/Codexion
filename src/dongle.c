@@ -1,4 +1,5 @@
 #include "dongle.h"
+#include "queue.h"
 #include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,7 +43,7 @@ static int	init_mutex_cond(t_dongle *dongle)
 	return (0);
 }
 
-t_dongle	*init_dongles(int nb_dongles)
+t_dongle	*init_dongles(int nb_dongles, char *q_mode)
 {
 	t_dongle	*dongles;
 	int	i;
@@ -56,6 +57,7 @@ t_dongle	*init_dongles(int nb_dongles)
 	{
 		if (init_mutex_cond(&dongles[i]) == -1)
 			free_dongles(dongles, i - 1);
+		q_init(&dongles[i].queue, q_mode);
 		i++;
 	}
 	return (dongles);

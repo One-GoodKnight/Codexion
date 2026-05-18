@@ -5,16 +5,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int	q_init(t_queue *queue, char *mode)
+void	q_init(t_queue *queue, char *mode)
 {
-	memset(queue, 0, sizeof(t_request) * QUEUE_SIZE);
+	memset(queue->requests, 0, sizeof(t_request) * QUEUE_SIZE);
 	queue->last_i = -1;
 	queue->max_i = QUEUE_SIZE - 1;
 	if (strcmp(mode, "fifo") == 0)
 		queue->mode = FIFO;
 	else
 		queue->mode = EDF;
-	return (0);
 }
 
 void	q_insert(t_queue *queue, t_coder *coder)
