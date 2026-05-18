@@ -19,59 +19,42 @@ static bool	ended(t_codexion *codexion)
 	return (end);
 }
 
-// static bool	dongle_available(t_dongle *dongle)
-// {
-// 	bool	dongle_available;
-//
-// 	dongle_available = false;
-// 	pthread_mutex_lock(&dongle->when_available_lock);
-// 	if (ft_get_time() >= dongle->when_available)
-// 		dongle_available = true;
-// 	pthread_mutex_unlock(&dongle->when_available_lock);
-// 	return (dongle_available);
-// }
-
 static bool	my_dongle(t_coder *coder, t_dongle *dongle)
 {
 	bool	mine;
 
-	pthread_mutex_lock(&dongle->owner_id_lock);
 	mine = coder->id == dongle->owner_id;
-	pthread_mutex_unlock(&dongle->owner_id_lock);
 	return (mine);
 }
 
 static void	take_dongle(t_coder *coder, t_dongle *dongle)
 {
-	pthread_mutex_lock(&dongle->owner_cond_lock);
+	pthread_mutex_lock(&dongle->queue.lock);
+	q_insert(&dongle->queue, coder);
+	pthread_mutex_unlock(&dongle->queue.lock);
+	pthread_mutex_lock(&dongle->owner_id_lock);
 	while (!(my_dongle(coder, dongle)))
 	{
 		if (ended(coder->codexion))
+		{
+			pthread_mutex_unlock(&dongle->owner_id_lock);
 			return ;
-		pthread_mutex_lock(&dongle->queue.lock);
-		q_insert(&dongle->queue, coder);
-		pthread_mutex_unlock(&dongle->queue.lock);
-		pthread_cond_wait(&dongle->owner_cond, &dongle->owner_cond_lock);
+		}
+		pthread_cond_wait(&dongle->owner_cond, &dongle->owner_id_lock);
 	}
-	pthread_mutex_unlock(&dongle->owner_cond_lock);
-	pthread_mutex_lock(&dongle->owner_lock);
+	pthread_mutex_unlock(&dongle->owner_id_lock);
 	ft_printf(coder, TAKING_DONGLE);
 }
 
-static void	take_dongles(t_coder *coder)
+static int	take_dongles(t_coder *coder)
 {
 	take_dongle(coder, coder->dongle_pair.first);
 	if (ended(coder->codexion))
-	{
-		pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
-		return ;
-	}
+		return (-1);
 	take_dongle(coder, coder->dongle_pair.second);
 	if (ended(coder->codexion))
-	{
-		pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
-		pthread_mutex_unlock(&coder->dongle_pair.second->owner_lock);
-	}
+		return (-1);
+	return (0);
 }
 
 static void	*routine(void *arg)
@@ -83,8 +66,7 @@ static void	*routine(void *arg)
 	codexion = coder->codexion;
 	while (!ended(codexion))
 	{
-		take_dongles(coder);
-		if (ended(codexion))
+		if (take_dongles(coder) == -1)
 			return (NULL);
 		compile(coder);
 		if (ended(codexion))

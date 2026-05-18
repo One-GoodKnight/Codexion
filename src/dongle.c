@@ -5,41 +5,24 @@
 #include <string.h>
 #include <stdio.h>
 
-static int	init_cond(t_dongle *dongle)
-{
-	if (pthread_cond_init(&dongle->owner_cond, NULL) != 0)
-	{
-		if (pthread_mutex_destroy(&dongle->owner_lock) != 0)
-			fprintf(stderr, "Failed to destroy owner mutex of dongle.\n");
-		if (pthread_mutex_destroy(&dongle->owner_id_lock) != 0)
-			fprintf(stderr, "Failed to destroy cond mutex of dongle.\n");
-		if (pthread_mutex_destroy(&dongle->when_available_lock) != 0)
-			fprintf(stderr, "Failed to destroy when avalaible mutex of dongle.\n");
-		return (-1);
-	}
-	return (0);
-}
-
 static int	init_mutex_cond(t_dongle *dongle)
 {
-	if (pthread_mutex_init(&dongle->owner_lock, NULL) != 0)
-		return (-1);
 	if (pthread_mutex_init(&dongle->owner_id_lock, NULL) != 0)
-	{
-		if (pthread_mutex_destroy(&dongle->owner_lock) != 0)
-			fprintf(stderr, "Failed to destroy owner mutex of dongle.\n");
 		return (-1);
-	}
 	if (pthread_mutex_init(&dongle->when_available_lock, NULL) != 0)
 	{
 		if (pthread_mutex_destroy(&dongle->owner_id_lock) != 0)
 			fprintf(stderr, "Failed to destroy cond mutex of dongle.\n");
-		if (pthread_mutex_destroy(&dongle->owner_lock) != 0)
-			fprintf(stderr, "Failed to destroy owner mutex of dongle.\n");
 		return (-1);
 	}
-	if (init_cond(dongle) == -1)
+	if (pthread_cond_init(&dongle->owner_cond, NULL) != 0)
+	{
+		if (pthread_mutex_destroy(&dongle->owner_id_lock) != 0)
+			fprintf(stderr, "Failed to destroy owner id mutex of dongle.\n");
+		if (pthread_mutex_destroy(&dongle->when_available_lock) != 0)
+			fprintf(stderr, "Failed to destroy when avalaible mutex of dongle.\n");
 		return (-1);
+	}
 	return (0);
 }
 
@@ -62,7 +45,6 @@ t_dongle	*init_dongles(int nb_dongles, char *q_mode)
 			free_q(&dongles[i].queue);
 			free_dongles(dongles, i - 1);
 		}
-		pthread_mutex_init(&dongles[i].owner_cond_lock, NULL);
 		dongles[i].owner_id = -1;
 		i++;
 	}
@@ -77,13 +59,12 @@ void	free_dongles(t_dongle *dongles, int nb_dongles)
 	while (i < nb_dongles)
 	{
 		free_q(&dongles[i].queue);
-		if (pthread_mutex_destroy(&dongles[i].owner_lock) != 0)
-			fprintf(stderr, "Failed to destroy owner mutex of dongle %d.\n", i);
 		if (pthread_mutex_destroy(&dongles[i].owner_id_lock) != 0)
-			fprintf(stderr, "Failed to destroy cd mutex of dongle %d.\n", i);
+			fprintf(stderr, "Failed to destroy owner id mutex of dongle.\n");
+		if (pthread_mutex_destroy(&dongles[i].when_available_lock) != 0)
+			fprintf(stderr, "Failed to destroy when avalaible mutex of dongle.\n");
 		if (pthread_cond_destroy(&dongles[i].owner_cond) != 0)
 			fprintf(stderr, "Failed to destroy cond of dongle %d.\n", i);
-		pthread_mutex_destroy(&dongles[i].owner_cond_lock);
 		i++;
 	}
 	free(dongles);

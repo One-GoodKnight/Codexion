@@ -4,6 +4,7 @@
 #include "queue.h"
 #include "utils.h"
 #include <pthread.h>
+#include <stdio.h>
 
 static void	release_threads(t_codexion *codexion)
 {
@@ -12,9 +13,9 @@ static void	release_threads(t_codexion *codexion)
 	i = 0;
 	while (i < codexion->args.number_of_coders)
 	{
-		pthread_mutex_lock(&codexion->dongles[i].owner_cond_lock);
+		pthread_mutex_lock(&codexion->dongles[i].owner_id_lock);
 		pthread_cond_broadcast(&codexion->dongles[i].owner_cond);
-		pthread_mutex_unlock(&codexion->dongles[i].owner_cond_lock);
+		pthread_mutex_unlock(&codexion->dongles[i].owner_id_lock);
 		i++;
 	}
 }
@@ -69,10 +70,13 @@ static void	broadcast(long long time, t_dongle *dongle)
 	bool	dongle_available;
 	t_coder	*coder;
 
-	dongle_available = false;
+	pthread_mutex_lock(&dongle->owner_id_lock);
+	dongle_available = (dongle->owner_id == -1);
+	pthread_mutex_unlock(&dongle->owner_id_lock);
+	if (!dongle_available)
+		return ;
 	pthread_mutex_lock(&dongle->when_available_lock);
-	if (time >= dongle->when_available)
-		dongle_available = true;
+	dongle_available = (time >= dongle->when_available);
 	pthread_mutex_unlock(&dongle->when_available_lock);
 	if (!dongle_available)
 		return ;
@@ -83,15 +87,14 @@ static void	broadcast(long long time, t_dongle *dongle)
 		return ;
 	pthread_mutex_lock(&dongle->owner_id_lock);
 	dongle->owner_id = coder->id;
-	pthread_mutex_unlock(&dongle->owner_id_lock);
-	pthread_mutex_lock(&dongle->owner_cond_lock);
 	pthread_cond_broadcast(&dongle->owner_cond);
-	pthread_mutex_unlock(&dongle->owner_cond_lock);
+	pthread_mutex_unlock(&dongle->owner_id_lock);
 }
 
 void	monitor(t_codexion *codexion)
 {
-	int	i;
+	int			i;
+	long long	time;
 
 	while (1)
 	{
@@ -103,9 +106,10 @@ void	monitor(t_codexion *codexion)
 		}
 		if (compiles_required(codexion))
 				return (release_threads(codexion));
+		time = ft_get_time();
 		i = 0;
 		while (i < codexion->args.number_of_coders)
-			broadcast(ft_get_time(), &codexion->dongles[i++]);
+			broadcast(time, &codexion->dongles[i++]);
 		ft_usleep(100);
 	}
 }

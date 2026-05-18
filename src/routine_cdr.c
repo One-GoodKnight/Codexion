@@ -2,26 +2,25 @@
 #include "codexion.h"
 #include "utils.h"
 #include <pthread.h>
+#include <stdio.h>
 
 static void	release_dongles(t_coder *coder)
 {
 	t_codexion	*codexion;
 
 	codexion = coder->codexion;
-	pthread_mutex_lock(&coder->dongle_pair.first->owner_id_lock);
-	pthread_mutex_lock(&coder->dongle_pair.second->owner_id_lock);
-	coder->dongle_pair.first->owner_id = -1;
-	coder->dongle_pair.second->owner_id = -1;
-	pthread_mutex_unlock(&coder->dongle_pair.first->owner_id_lock);
-	pthread_mutex_unlock(&coder->dongle_pair.second->owner_id_lock);
 	pthread_mutex_lock(&coder->dongle_pair.first->when_available_lock);
 	pthread_mutex_lock(&coder->dongle_pair.second->when_available_lock);
 	coder->dongle_pair.first->when_available = ft_get_time() + (long long)codexion->args.dongle_cooldown * 1000;
 	coder->dongle_pair.second->when_available = ft_get_time() + (long long)codexion->args.dongle_cooldown * 1000;
 	pthread_mutex_unlock(&coder->dongle_pair.second->when_available_lock);
 	pthread_mutex_unlock(&coder->dongle_pair.first->when_available_lock);
-	pthread_mutex_unlock(&coder->dongle_pair.second->owner_lock);
-	pthread_mutex_unlock(&coder->dongle_pair.first->owner_lock);
+	pthread_mutex_lock(&coder->dongle_pair.first->owner_id_lock);
+	pthread_mutex_lock(&coder->dongle_pair.second->owner_id_lock);
+	coder->dongle_pair.first->owner_id = -1;
+	coder->dongle_pair.second->owner_id = -1;
+	pthread_mutex_unlock(&coder->dongle_pair.second->owner_id_lock);
+	pthread_mutex_unlock(&coder->dongle_pair.first->owner_id_lock);
 }
 
 void	compile(t_coder *coder)
