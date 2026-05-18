@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:30:26 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 19:30:12 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 22:50:43 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,26 @@ void	heapify_last_request(t_queue *queue)
 
 void	heapify_first_request(t_queue *q)
 {
-	int	i;
-	int	i_left_child;
-	int	i_right_child;
-	int	i_smallest_child;
+	int			i;
+	int			i_left;
+	int			i_right;
+	int			i_min;
+	t_request	*reqs;
 
+	reqs = q->requests;
 	i = 0;
 	while (i < q->last_i)
 	{
-		i_left_child = i * 2 + 1;
-		if (i_left_child > q->last_i)
-			return ;
-		i_right_child = i * 2 + 2;
-		if (q->requests[i_left_child].value <= q->requests[i_right_child].value)
-			i_smallest_child = i_left_child;
-		else
-			i_smallest_child = i_right_child;
-		swap_requests(q, i_smallest_child, i);
-		i = i_smallest_child;
+		i_left = i * 2 + 1;
+		i_right = i * 2 + 2;
+		i_min = i;
+		if (i_left <= q->last_i && reqs[i_left].value < reqs[i_min].value)
+			i_min = i_left;
+		if (i_right <= q->last_i && reqs[i_right].value < reqs[i_min].value)
+			i_min = i_right;
+		if (i == i_min)
+			break ;
+		swap_requests(q, i_min, i);
+		i = i_min;
 	}
 }

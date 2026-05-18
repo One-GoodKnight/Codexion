@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:39 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:59:10 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 22:37:29 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	free_dongles(t_dongle *dongles, int nb_dongles)
 	{
 		free_q(&dongles[i].queue);
 		if (pthread_mutex_destroy(&dongles[i].owner_id_lock) != 0)
-			fprintf(stderr, "Failed to destroy owner id mutex of dongle.\n");
+			fprintf(stderr, "Failed to destroy owner_id mutex of dongle.\n");
 		if (pthread_mutex_destroy(&dongles[i].when_available_lock) != 0)
 			fprintf(stderr, "Failed to destroy when_available "
 				"mutex of dongle.\n");
