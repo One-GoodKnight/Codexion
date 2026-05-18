@@ -5,14 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int	q_init(t_queue *queue, int size, char *mode)
+int	q_init(t_queue *queue, char *mode)
 {
-	queue->requests = malloc(sizeof(t_request) * size);
-	if (!queue->requests)
-		return (-1);
-	memset(queue, 0, sizeof(t_request) * size);
+	memset(queue, 0, sizeof(t_request) * QUEUE_SIZE);
 	queue->last_i = -1;
-	queue->max_i = size - 1;
+	queue->max_i = QUEUE_SIZE - 1;
 	if (strcmp(mode, "fifo"))
 		queue->mode = FIFO;
 	else
@@ -23,7 +20,7 @@ int	q_init(t_queue *queue, int size, char *mode)
 void	q_insert(t_queue *queue, t_coder *coder)
 {
 	long long	value;
-	if (queue->last_i == queue->max_i)
+	if (queue->last_i >= queue->max_i)
 	{
 		fprintf(stderr, "Can't insert coder in a full queue.");
 		return ;
@@ -35,16 +32,16 @@ void	q_insert(t_queue *queue, t_coder *coder)
 	else
 		value = coder->last_compile_start + coder->codexion->args.time_to_burnout;
 	queue->requests[queue->last_i].value = value;
-	heapify_last_element(queue);
+	heapify_last_request(queue);
 }
 
 t_coder	*q_extract(t_queue *queue)
 {
-	t_request	*request;
+	t_request	*min_request;
 	if (queue->last_i == -1)
 		return (NULL);
-	swap_root_tail(queue);
-	request = &queue->requests[queue->last_i];
+	swap_requests(queue, 0, queue->last_i);
+	min_request = &queue->requests[queue->last_i];
 	queue->last_i--;
-	return (request->coder);
+	return (min_request->coder);
 }
