@@ -17,6 +17,7 @@ int	ft_atoi(const char *nptr, int *err)
 	int			i;
 	int			raw_digit;
 
+	*err = 0;
 	if (!ft_isdigit(nptr[0]))
 		return (set_err(err));
 	res = 0;
