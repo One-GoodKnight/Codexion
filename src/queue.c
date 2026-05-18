@@ -1,28 +1,23 @@
 #include "queue.h"
 #include <string.h>
-#include <stdlib.h>
+#include <stdio.h>
 
-void	q_init(t_queue *queue)
+void	q_init(t_queue *queue, int size)
 {
 	memset(queue, 0, sizeof(t_queue));
+	queue->last_i = -1;
+	queue->max_i = size - 1;
 }
 
-int		q_insert(t_queue *queue, t_coder *coder)
+void	q_insert(t_queue *queue, t_coder *coder)
 {
-	t_node	*node;
-
-	node = malloc(sizeof(t_node));
-	if (!node)
-		return (-1);
-	memset(node, 0, sizeof(t_node));
-	node->value = coder;
-	if (!queue->last)
+	if (queue->last_i == queue->max_i)
 	{
-		queue->min = node;
-		queue->last = node;
+		fprintf(stderr, "Can't insert coder in a full queue.");
+		return ;
 	}
-	queue
-	queue->l
+	queue->last_i++;
+	queue->coders[queue->last_i] = *coder;
 }
 
 void	q_extract(t_queue *queue)

@@ -3,6 +3,7 @@
 #include "dongle.h"
 #include "utils.h"
 #include <pthread.h>
+#include <stdio.h>
 
 static void	release_threads(t_codexion *codexion)
 {
@@ -96,10 +97,7 @@ void	monitor(t_codexion *codexion)
 				return (release_threads(codexion));
 		i = 0;
 		while (i < codexion->args.number_of_coders)
-		{
-			broadcast_if_needed(ft_get_time(), &codexion->dongles[i]);
-			i++;
-		}
+			broadcast_if_needed(ft_get_time(), &codexion->dongles[i++]);
 		ft_usleep(100);
 	}
 }
