@@ -8,8 +8,10 @@
 typedef struct s_dongle
 {
 	pthread_mutex_t	owner_lock;
-	pthread_cond_t	cd_cond;
-	pthread_mutex_t	cd_lock;
+	pthread_cond_t	owner_cond;
+	pthread_mutex_t	owner_cond_lock;
+	int				owner_id;
+	pthread_mutex_t	owner_id_lock;
 	long long		when_available;
 	pthread_mutex_t	when_available_lock;
 	t_queue			queue;

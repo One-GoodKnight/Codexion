@@ -1,6 +1,8 @@
 #ifndef QUEUE_H
 # define QUEUE_H
 
+# include <pthread.h>
+
 # define QUEUE_SIZE 2
 
 typedef struct s_coder t_coder;
@@ -19,15 +21,17 @@ typedef struct	s_request
 
 typedef struct	s_queue
 {
-	t_request	requests[QUEUE_SIZE];
-	int			last_i;
-	int			max_i;
-	t_mode		mode;
+	t_request		requests[QUEUE_SIZE];
+	int				last_i;
+	int				max_i;
+	t_mode			mode;
+	pthread_mutex_t	lock;
 }	t_queue;
 
-void	q_init(t_queue *queue, char *mode);
+int		q_init(t_queue *queue, char *mode);
 void	q_insert(t_queue *queue, t_coder *coder);
 t_coder	*q_extract(t_queue *queue);
+void	free_q(t_queue *queue);
 
 void	swap_requests(t_queue *queue, int one, int two);
 void	heapify_last_request(t_queue *queue);

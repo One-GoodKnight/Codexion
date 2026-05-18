@@ -1,6 +1,7 @@
 #include "coder.h"
 #include "codexion.h"
 #include "dongle.h"
+#include "queue.h"
 #include "utils.h"
 #include <pthread.h>
 
@@ -11,9 +12,9 @@ static void	release_threads(t_codexion *codexion)
 	i = 0;
 	while (i < codexion->args.number_of_coders)
 	{
-		pthread_mutex_lock(&codexion->dongles[i].cd_lock);
-		pthread_cond_broadcast(&codexion->dongles[i].cd_cond);
-		pthread_mutex_unlock(&codexion->dongles[i].cd_lock);
+		pthread_mutex_lock(&codexion->dongles[i].owner_cond_lock);
+		pthread_cond_broadcast(&codexion->dongles[i].owner_cond);
+		pthread_mutex_unlock(&codexion->dongles[i].owner_cond_lock);
 		i++;
 	}
 }
@@ -63,26 +64,34 @@ static bool	compiles_required(t_codexion *codexion)
 	return (required);
 }
 
-static void	broadcast_if_needed(long long time, t_dongle *dongle)
+static void	broadcast(long long time, t_dongle *dongle)
 {
-	bool		broadcast;
+	bool	dongle_available;
+	t_coder	*coder;
 
-	broadcast = false;
+	dongle_available = false;
 	pthread_mutex_lock(&dongle->when_available_lock);
 	if (time >= dongle->when_available)
-		broadcast = true;
+		dongle_available = true;
 	pthread_mutex_unlock(&dongle->when_available_lock);
-	if (broadcast)
-	{
-		pthread_mutex_lock(&dongle->cd_lock);
-		pthread_cond_broadcast(&dongle->cd_cond);
-		pthread_mutex_unlock(&dongle->cd_lock);
-	}
+	if (!dongle_available)
+		return ;
+	pthread_mutex_lock(&dongle->queue.lock);
+	coder = q_extract(&dongle->queue);
+	pthread_mutex_unlock(&dongle->queue.lock);
+	if (!coder)
+		return ;
+	pthread_mutex_lock(&dongle->owner_id_lock);
+	dongle->owner_id = coder->id;
+	pthread_mutex_unlock(&dongle->owner_id_lock);
+	pthread_mutex_lock(&dongle->owner_cond_lock);
+	pthread_cond_broadcast(&dongle->owner_cond);
+	pthread_mutex_unlock(&dongle->owner_cond_lock);
 }
 
 void	monitor(t_codexion *codexion)
 {
-	int			i;
+	int	i;
 
 	while (1)
 	{
@@ -96,7 +105,7 @@ void	monitor(t_codexion *codexion)
 				return (release_threads(codexion));
 		i = 0;
 		while (i < codexion->args.number_of_coders)
-			broadcast_if_needed(ft_get_time(), &codexion->dongles[i++]);
+			broadcast(ft_get_time(), &codexion->dongles[i++]);
 		ft_usleep(100);
 	}
 }
