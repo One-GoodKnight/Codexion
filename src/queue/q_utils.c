@@ -28,5 +28,23 @@ void	heapify_last_request(t_queue *queue)
 
 void	heapify_first_request(t_queue *queue)
 {
+	int	i;
+	int	i_left_child;
+	int	i_right_child;
+	int	i_smallest_child;
 
+	i = 0;
+	while (i < queue->last_i)
+	{
+		i_left_child = i * 2 + 1;
+		if (i_left_child > queue->last_i)
+			return ;
+		i_right_child = i * 2 + 1;
+		if (queue->requests[i_left_child].value <= queue->requests[i_right_child].value)
+			i_smallest_child = i_left_child;
+		else
+			i_smallest_child = i_right_child;
+		swap_requests(queue, i_smallest_child, i);
+		i = i_smallest_child;
+	}
 }
