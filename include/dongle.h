@@ -4,6 +4,8 @@
 # include <pthread.h>
 # include <stdbool.h>
 
+typedef struct s_queue t_queue;
+
 typedef struct s_dongle
 {
 	pthread_mutex_t	owner_lock;
@@ -11,6 +13,7 @@ typedef struct s_dongle
 	pthread_mutex_t	cd_lock;
 	long long		when_available;
 	pthread_mutex_t	when_available_lock;
+	t_queue			*queue;
 }	t_dongle;
 
 typedef struct s_dongle_pair
