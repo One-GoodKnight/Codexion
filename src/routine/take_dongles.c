@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:40:15 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 20:52:05 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 23:39:44 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,4 @@ void	take_dongles(t_coder *coder)
 	if (ended(coder->codexion))
 		return ;
 	take_dongle(coder, coder->dongle_pair.second);
-	if (ended(coder->codexion))
-		return ;
 }

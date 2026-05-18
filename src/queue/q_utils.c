@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:30:26 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 22:50:43 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/19 00:02:02 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,24 @@ void	heapify_last_request(t_queue *queue)
 {
 	int	i;
 	int	i_parent;
+	int	tie_breaker_id_parent;
+	int	tie_breaker_id_child;
 
 	i = queue->last_i;
 	while (i != 0)
 	{
 		i_parent = (i - 1) / 2;
-		if (queue->requests[i_parent].value <= queue->requests[i].value)
+		if (queue->requests[i_parent].value < queue->requests[i].value)
 			return ;
+		if (queue->requests[i_parent].value == queue->requests[i].value)
+		{
+			tie_breaker_id_parent = queue->requests[i_parent].coder->id;
+			tie_breaker_id_child = queue->requests[i].coder->id;
+			if (tie_breaker_id_parent < tie_breaker_id_child)
+				return ;
+			swap_requests(queue, i_parent, i);
+			return ;
+		}
 		swap_requests(queue, i_parent, i);
 		i = i_parent;
 	}
