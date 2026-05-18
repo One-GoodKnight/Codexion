@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:48:03 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 18:57:33 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ static void	release_threads(t_codexion *codexion)
 
 static bool	burnout(t_codexion *codexion, t_coder *coder)
 {
-	bool	burnout;
+	bool		burnout;
+	long long	burnout_time_usec;
 
 	pthread_mutex_lock(&coder->comp_start_or_count_lock);
-	burnout = ft_get_time() - coder->last_compile_start >= (long long)codexion->args.time_to_burnout * 1000;
+	burnout_time_usec = (long long)codexion->args.time_to_burnout * 1000;
+	burnout = ft_get_time() - coder->last_compile_start >= burnout_time_usec;
 	pthread_mutex_unlock(&coder->comp_start_or_count_lock);
 	if (burnout)
 	{
@@ -53,6 +55,7 @@ static bool	compiles_required(t_codexion *codexion)
 {
 	t_coder	*coder;
 	bool	required;
+	int		compiles_required;
 	int		i;
 
 	required = true;
@@ -61,7 +64,8 @@ static bool	compiles_required(t_codexion *codexion)
 	{
 		coder = &codexion->coders[i];
 		pthread_mutex_lock(&coder->comp_start_or_count_lock);
-		required = coder->compile_count >= codexion->args.number_of_compiles_required;
+		compiles_required = codexion->args.number_of_compiles_required;
+		required = coder->compile_count >= compiles_required;
 		pthread_mutex_unlock(&coder->comp_start_or_count_lock);
 		if (!required)
 			break ;
@@ -116,7 +120,7 @@ void	monitor(t_codexion *codexion)
 				return (release_threads(codexion));
 		}
 		if (compiles_required(codexion))
-				return (release_threads(codexion));
+			return (release_threads(codexion));
 		time = ft_get_time();
 		i = 0;
 		while (i < codexion->args.number_of_coders)

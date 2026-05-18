@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:50 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:45:39 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 18:51:19 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ void	free_coders(t_coder *coders, int nb_coders)
 	while (i < nb_coders)
 	{
 		if (pthread_mutex_destroy(&coders[i].comp_start_or_count_lock) != 0)
-			fprintf(stderr, "Failed to destroy compile_time_or_count mutex of coder %d.\n", i);
+			fprintf(stderr, "Failed to destroy compile_time_or_count "
+				"mutex of coder %d.\n", i);
 		i++;
 	}
 	free(coders);
