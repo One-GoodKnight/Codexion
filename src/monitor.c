@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:24 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:29:28 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 18:48:03 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,9 @@ static bool	burnout(t_codexion *codexion, t_coder *coder)
 {
 	bool	burnout;
 
-	pthread_mutex_lock(&coder->compile_time_or_count_lock);
+	pthread_mutex_lock(&coder->comp_start_or_count_lock);
 	burnout = ft_get_time() - coder->last_compile_start >= (long long)codexion->args.time_to_burnout * 1000;
-	pthread_mutex_unlock(&coder->compile_time_or_count_lock);
+	pthread_mutex_unlock(&coder->comp_start_or_count_lock);
 	if (burnout)
 	{
 		pthread_mutex_lock(&codexion->end_lock);
@@ -60,9 +60,9 @@ static bool	compiles_required(t_codexion *codexion)
 	while (i < codexion->args.number_of_coders)
 	{
 		coder = &codexion->coders[i];
-		pthread_mutex_lock(&coder->compile_time_or_count_lock);
+		pthread_mutex_lock(&coder->comp_start_or_count_lock);
 		required = coder->compile_count >= codexion->args.number_of_compiles_required;
-		pthread_mutex_unlock(&coder->compile_time_or_count_lock);
+		pthread_mutex_unlock(&coder->comp_start_or_count_lock);
 		if (!required)
 			break ;
 		i++;

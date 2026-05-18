@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:50 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:29:51 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 18:45:39 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 t_coder	*init_coders(t_codexion *codexion)
 {
 	t_coder	*coders;
-	int	nb_coders;
-	int	i;
+	int		nb_coders;
+	int		i;
 
 	nb_coders = codexion->args.number_of_coders;
 	coders = malloc(sizeof(t_coder) * nb_coders);
@@ -32,7 +32,7 @@ t_coder	*init_coders(t_codexion *codexion)
 	i = 0;
 	while (i < nb_coders)
 	{
-		if (pthread_mutex_init(&coders[i].compile_time_or_count_lock, NULL) != 0)
+		if (pthread_mutex_init(&coders[i].comp_start_or_count_lock, NULL) != 0)
 		{
 			free_coders(coders, nb_coders);
 			return (NULL);
@@ -52,7 +52,7 @@ void	free_coders(t_coder *coders, int nb_coders)
 	i = 0;
 	while (i < nb_coders)
 	{
-		if (pthread_mutex_destroy(&coders[i].compile_time_or_count_lock) != 0)
+		if (pthread_mutex_destroy(&coders[i].comp_start_or_count_lock) != 0)
 			fprintf(stderr, "Failed to destroy compile_time_or_count mutex of coder %d.\n", i);
 		i++;
 	}

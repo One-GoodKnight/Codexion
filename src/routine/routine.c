@@ -6,7 +6,7 @@
 /*   By: aginiaux <aginiaux@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/18 18:29:16 by aginiaux          #+#    #+#             */
-/*   Updated: 2026/05/18 18:29:18 by aginiaux         ###   ########lyon.fr   */
+/*   Updated: 2026/05/18 18:40:13 by aginiaux         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,54 +21,6 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-static bool	ended(t_codexion *codexion)
-{
-	bool	end;
-
-	pthread_mutex_lock(&codexion->end_lock);
-	end = codexion->end;
-	pthread_mutex_unlock(&codexion->end_lock);
-	return (end);
-}
-
-static bool	my_dongle(t_coder *coder, t_dongle *dongle)
-{
-	bool	mine;
-
-	mine = coder->id == dongle->owner_id;
-	return (mine);
-}
-
-static void	take_dongle(t_coder *coder, t_dongle *dongle)
-{
-	pthread_mutex_lock(&dongle->queue.lock);
-	q_insert(&dongle->queue, coder);
-	pthread_mutex_unlock(&dongle->queue.lock);
-	pthread_mutex_lock(&dongle->owner_id_lock);
-	while (!(my_dongle(coder, dongle)))
-	{
-		if (ended(coder->codexion))
-		{
-			pthread_mutex_unlock(&dongle->owner_id_lock);
-			return ;
-		}
-		pthread_cond_wait(&dongle->owner_cond, &dongle->owner_id_lock);
-	}
-	pthread_mutex_unlock(&dongle->owner_id_lock);
-	ft_printf(coder, TAKING_DONGLE);
-}
-
-static int	take_dongles(t_coder *coder)
-{
-	take_dongle(coder, coder->dongle_pair.first);
-	if (ended(coder->codexion))
-		return (-1);
-	take_dongle(coder, coder->dongle_pair.second);
-	if (ended(coder->codexion))
-		return (-1);
-	return (0);
-}
-
 static void	*routine(void *arg)
 {
 	t_coder		*coder;
@@ -78,7 +30,8 @@ static void	*routine(void *arg)
 	codexion = coder->codexion;
 	while (!ended(codexion))
 	{
-		if (take_dongles(coder) == -1)
+		take_dongles(coder);
+		if (ended(codexion))
 			return (NULL);
 		compile(coder);
 		if (ended(codexion))
@@ -87,6 +40,8 @@ static void	*routine(void *arg)
 		if (ended(codexion))
 			return (NULL);
 		refactor(coder);
+		if (ended(codexion))
+			return (NULL);
 	}
 	return (NULL);
 }

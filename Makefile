@@ -6,6 +6,11 @@ SRCS			:= 								\
 	queue/q_utils.c								\
 	queue/queue.c								\
 												\
+	routine/comp_deb_ref.c						\
+	routine/ended.c								\
+	routine/routine.c							\
+	routine/take_dongles.c						\
+												\
 	utils/ft_atoi.c								\
 	utils/ft_get_time.c							\
 	utils/ft_memcpy.c							\
@@ -18,8 +23,6 @@ SRCS			:= 								\
 	dongle.c									\
 	main.c										\
 	monitor.c									\
-	routine.c									\
-	routine_cdr.c								\
 
 INCLUDES		:= 								\
 	include										\
